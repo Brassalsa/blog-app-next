@@ -5,7 +5,7 @@ import React from "react";
 
 function SignIn() {
   return (
-    <div className="flex flex-col gap-3 justify-center items-center">
+    <div className="flex flex-col py-16 gap-3 justify-center items-center">
       <h3 className="font-semibold text-2xl">Sign in/up with</h3>
       <SignInCard className="bg-orange-600 text-white">Google</SignInCard>
       <SignInCard className="bg-black text-white">Github</SignInCard>
@@ -22,7 +22,10 @@ function SignInCard({ className, children, hanldeClick }: Props) {
   return (
     <button
       onClick={() => hanldeClick?.()}
-      className={cn("m-2 p-2 rounded-md", className)}
+      className={cn(
+        "m-2 p-2 rounded-md hover:opacity-75 transition-opacity duration-200 border border-primary",
+        className
+      )}
     >
       {children}
     </button>

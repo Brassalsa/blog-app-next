@@ -5,6 +5,8 @@ import Container from "./ui/container";
 import Logo from "./Logo";
 import ButtonLink from "./ui/buttonLink";
 import { useRouter } from "next/navigation";
+import { ThemeProvider } from "./context/Theme";
+import { ThemeToggle } from "./ThemeToggle";
 
 function Header() {
   const router = useRouter();
@@ -15,6 +17,9 @@ function Header() {
         <nav className="flex gap-2 items-center">
           <Logo />
           <ul className="ml-auto flex gap-2 justify-center items-center">
+            <li>
+              <ThemeToggle />
+            </li>
             <li>
               <ButtonLink href="/">Home</ButtonLink>
             </li>
