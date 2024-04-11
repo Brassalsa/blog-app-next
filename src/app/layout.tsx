@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Container from "@/components/ui/container";
 import TopLoader from "@/components/TopLoader";
 import { ThemeProvider } from "@/components/context/Theme";
+import ContextProvider from "@/components/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,16 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ContextProvider>
           <TopLoader />
           <Header />
           <Container>{children}</Container>
-        </ThemeProvider>
+        </ContextProvider>
       </body>
     </html>
   );
