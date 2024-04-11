@@ -7,10 +7,12 @@ import ButtonLink from "./ui/buttonLink";
 import { useRouter } from "next/navigation";
 import { ThemeProvider } from "./context/Theme";
 import { ThemeToggle } from "./ThemeToggle";
+import { signOut, useSession } from "next-auth/react";
 
 function Header() {
   const router = useRouter();
-
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
   return (
     <div>
       <Container className="p-3">
@@ -29,13 +31,17 @@ function Header() {
             <li></li>
 
             <li className="ml-auto">
-              <Button
-                onClick={() => {
-                  router.push("/sign-in");
-                }}
-              >
-                Signup
-              </Button>
+              {isLoggedIn ? (
+                <Button onClick={() => signOut()}>Logout</Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    router.push("/sign-in");
+                  }}
+                >
+                  Signup
+                </Button>
+              )}
             </li>
           </ul>
         </nav>
