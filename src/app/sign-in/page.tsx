@@ -1,10 +1,18 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { signIn } from "next-auth/react";
+import SignInCard from "@/components/SignInCard";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function SignIn() {
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "authenticated") {
+    router.back();
+  }
+
   return (
     <div className="flex flex-col py-16 gap-3 justify-center items-center">
       <h3 className="font-semibold text-2xl">Sign in/up with</h3>
@@ -27,25 +35,6 @@ function SignIn() {
         Facebook
       </SignInCard>
     </div>
-  );
-}
-
-type Props = {
-  className?: string;
-  children: React.ReactNode;
-  handleClick?: Function;
-};
-function SignInCard({ className, children, handleClick }: Props) {
-  return (
-    <button
-      onClick={() => handleClick?.()}
-      className={cn(
-        "m-2 p-2 w-32 rounded-md hover:opacity-75 transition-opacity duration-200 border border-primary",
-        className
-      )}
-    >
-      {children}
-    </button>
   );
 }
 
