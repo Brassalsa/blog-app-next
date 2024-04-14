@@ -5,7 +5,7 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 
-import { checkEnvVarsOrThrow } from "./utils/helpers";
+import { checkEnvVarsOrThrow } from "@/lib/utils/helpers";
 
 export const authOptions: AuthOptions = {
   //@ts-expect-error
