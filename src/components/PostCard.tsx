@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { CategList } from "./Categories";
 import { ALL_CATEGORIES } from "@/lib/constants";
+import { links } from "@/lib/routes";
 
 type Props = {
   id: string;
@@ -16,7 +17,7 @@ type Props = {
 function PostCard({ id, title, catg, desc, date, className }: Props) {
   return (
     <Link
-      href={"blog/" + id}
+      href={links.blog(id)}
       className={cn(
         "border-4 p-3 max-w-full w-72 overflow-ellipsis flex flex-col gap-2 rounded-md",
         className

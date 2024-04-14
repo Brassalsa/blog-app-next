@@ -1,18 +1,23 @@
 "use client";
 import React from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import { Button } from "./ui/button";
 import Container from "./ui/container";
 import Logo from "./Logo";
 import ButtonLink from "./ui/buttonLink";
-import { useRouter } from "next/navigation";
-import { ThemeProvider } from "./context/Theme";
 import { ThemeToggle } from "./ThemeToggle";
-import { signOut, useSession } from "next-auth/react";
+import { ButtonLoading } from "./ui/buttonLoading";
+import Image from "next/image";
+import TooltipComponent from "./ui/tooltip";
+import { links } from "@/lib/routes";
 
 function Header() {
   const router = useRouter();
-  const { status } = useSession();
+  const { status, data } = useSession();
   const isLoggedIn = status === "authenticated";
+  const isLoading = status === "loading";
   return (
     <div>
       <Container className="p-3">
@@ -23,20 +28,41 @@ function Header() {
               <ThemeToggle />
             </li>
             <li>
-              <ButtonLink href="/">Home</ButtonLink>
+              <ButtonLink href={links.home}>Home</ButtonLink>
             </li>
             <li>
-              <ButtonLink href="/blogs">Blogs</ButtonLink>
+              <ButtonLink href={links.blogs}>Blogs</ButtonLink>
             </li>
-            <li></li>
+            <li>
+              <ButtonLink href={links.about}>About</ButtonLink>
+            </li>
 
             <li className="ml-auto">
-              {isLoggedIn ? (
-                <Button onClick={() => signOut()}>Logout</Button>
+              {isLoading ? (
+                <ButtonLoading variant={"ghost"} />
+              ) : isLoggedIn ? (
+                <ButtonLink href={links.account}>
+                  <TooltipComponent
+                    showOnHover={() => (
+                      <>
+                        <p>Account Page</p>
+                      </>
+                    )}
+                  >
+                    <div className="relative size-8 rounded-full overflow-hidden">
+                      <Image
+                        src={data.user?.image || ""}
+                        alt="acount"
+                        fill
+                        sizes="30px"
+                      />
+                    </div>
+                  </TooltipComponent>
+                </ButtonLink>
               ) : (
                 <Button
                   onClick={() => {
-                    router.push("/sign-in");
+                    router.push(links.signIn);
                   }}
                 >
                   Signup
