@@ -2,6 +2,8 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { PencilIcon } from "lucide-react";
 
 import { Button } from "./ui/button";
 import Container from "./ui/container";
@@ -9,7 +11,6 @@ import Logo from "./Logo";
 import ButtonLink from "./ui/buttonLink";
 import { ThemeToggle } from "./ThemeToggle";
 import { ButtonLoading } from "./ui/buttonLoading";
-import Image from "next/image";
 import TooltipComponent from "./ui/tooltip";
 import { links } from "@/lib/routes";
 
@@ -41,24 +42,34 @@ function Header() {
               {isLoading ? (
                 <ButtonLoading variant={"ghost"} />
               ) : isLoggedIn ? (
-                <ButtonLink href={links.account}>
-                  <TooltipComponent
-                    showOnHover={() => (
-                      <>
-                        <p>Account Page</p>
-                      </>
-                    )}
-                  >
-                    <div className="relative size-8 rounded-full overflow-hidden">
-                      <Image
-                        src={data.user?.image || ""}
-                        alt="acount"
-                        fill
-                        sizes="30px"
-                      />
-                    </div>
-                  </TooltipComponent>
-                </ButtonLink>
+                <>
+                  <ButtonLink href={links.addBlog}>
+                    <TooltipComponent showOnHover={() => <p>Add new Post</p>}>
+                      <span>
+                        <PencilIcon size={17} className="-translate-y-1" />
+                      </span>
+                    </TooltipComponent>
+                  </ButtonLink>
+
+                  <ButtonLink href={links.account}>
+                    <TooltipComponent
+                      showOnHover={() => (
+                        <>
+                          <p>Account Page</p>
+                        </>
+                      )}
+                    >
+                      <div className="relative size-8 rounded-full overflow-hidden">
+                        <Image
+                          src={data.user?.image || ""}
+                          alt="acount"
+                          fill
+                          sizes="30px"
+                        />
+                      </div>
+                    </TooltipComponent>
+                  </ButtonLink>
+                </>
               ) : (
                 <Button
                   onClick={() => {
