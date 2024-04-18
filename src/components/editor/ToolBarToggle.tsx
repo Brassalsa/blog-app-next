@@ -8,14 +8,16 @@ type Props = ToggleProps & {
   onHoverMessage: string;
 };
 
-function ToolBarToggle({ Icon, onHoverMessage, ...rest }: Props) {
-  return (
-    <TooltipComponent showOnHover={() => <p>{onHoverMessage}</p>}>
-      <Toggle {...rest} size={"sm"}>
-        <Icon className="size-4" />
-      </Toggle>
-    </TooltipComponent>
-  );
-}
+const ToolBarToggle = React.forwardRef<Props, any>(
+  ({ Icon, onHoverMessage, ...rest }: Props, ref: any) => {
+    return (
+      <TooltipComponent showOnHover={() => <p>{onHoverMessage}</p>}>
+        <Toggle {...rest} size={"sm"} ref={ref}>
+          <Icon className="size-4" />
+        </Toggle>
+      </TooltipComponent>
+    );
+  }
+);
 
 export default ToolBarToggle;
