@@ -11,6 +11,7 @@ import {
   starterConfig,
   textAlignConfig,
 } from "@/lib/config/editor";
+import useDebounce from "@/hooks/debounce";
 
 type Props = {
   description: string;
@@ -18,6 +19,8 @@ type Props = {
 };
 
 function Editor({ description, onChange }: Props) {
+  const debounce = useDebounce();
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure(starterConfig),
@@ -32,7 +35,9 @@ function Editor({ description, onChange }: Props) {
       },
     },
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      debounce(() => {
+        onChange(editor.getHTML());
+      });
       console.log(editor.getHTML());
     },
   });
