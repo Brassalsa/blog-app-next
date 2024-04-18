@@ -1,13 +1,16 @@
 "use client";
 
-type Cb = () => void;
-const useDebounce = (interval: number = 200) => {
-  return (cb: Cb, int: number = interval) => {
-    const timeout = setTimeout(() => {
-      cb();
-    }, int);
+import { useRef } from "react";
 
-    return clearTimeout(timeout);
+type Cb = () => void;
+const useDebounce = (int: number = 200) => {
+  const timerId = useRef<any>(null);
+
+  return (cb: Cb, delay = int) => {
+    clearTimeout(timerId.current);
+    timerId.current = setTimeout(() => {
+      cb();
+    }, delay);
   };
 };
 
