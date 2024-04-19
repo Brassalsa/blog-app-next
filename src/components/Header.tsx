@@ -13,6 +13,8 @@ import { ThemeToggle } from "./ThemeToggle";
 import { ButtonLoading } from "./ui/buttonLoading";
 import TooltipComponent from "./ui/tooltip";
 import { links } from "@/lib/routes";
+import Show from "./ui/show";
+import { Skeleton } from "./ui/skeleton";
 
 function Header() {
   const router = useRouter();
@@ -39,10 +41,14 @@ function Header() {
             </li>
 
             <li className="ml-auto">
-              {isLoading ? (
-                <ButtonLoading variant={"ghost"} />
-              ) : isLoggedIn ? (
-                <>
+              <Show>
+                <Show.When isTrue={isLoading}>
+                  <Skeleton className="h-8 w-16 flex justify-center items-center">
+                    <ButtonLoading variant={"ghost"} />
+                  </Skeleton>
+                </Show.When>
+
+                <Show.When isTrue={isLoggedIn}>
                   <ButtonLink href={links.addBlog}>
                     <TooltipComponent showOnHover={() => <p>Add new Post</p>}>
                       <span>
@@ -61,7 +67,7 @@ function Header() {
                     >
                       <div className="relative size-8 rounded-full overflow-hidden">
                         <Image
-                          src={data.user?.image || ""}
+                          src={data?.user?.image || ""}
                           alt="acount"
                           fill
                           sizes="30px"
@@ -69,16 +75,18 @@ function Header() {
                       </div>
                     </TooltipComponent>
                   </ButtonLink>
-                </>
-              ) : (
-                <Button
-                  onClick={() => {
-                    router.push(links.signIn);
-                  }}
-                >
-                  Signup
-                </Button>
-              )}
+                </Show.When>
+
+                <Show.Else>
+                  <Button
+                    onClick={() => {
+                      router.push(links.signIn);
+                    }}
+                  >
+                    Signup
+                  </Button>
+                </Show.Else>
+              </Show>
             </li>
           </ul>
         </nav>
