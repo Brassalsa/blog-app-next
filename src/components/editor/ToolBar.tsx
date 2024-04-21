@@ -16,6 +16,7 @@ import {
 
 import ToolBarToggle from "./ToolBarToggle";
 import ToolBarLink from "./ToolBarLink";
+import ToolBarImage from "./ToolBarImage";
 
 type Props = {
   editor: Editor | null;
@@ -103,6 +104,7 @@ export function ToolBar({ editor }: Props) {
         Icon={AlignRight}
         onHoverMessage="Text align right"
       />
+      <ToolBarImage editor={editor} />
     </div>
   );
 }
