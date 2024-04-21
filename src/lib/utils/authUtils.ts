@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getAuthSession } from "../auth";
+import { getAuthSession } from "../services/auth";
 
 export const getSessionOrRedirect = async (to: string = "/") => {
   const session = await getAuthSession();
