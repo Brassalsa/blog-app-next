@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { type Editor } from "@tiptap/react";
 import ToolBarToggle from "./ToolBarToggle";
 import { Link } from "lucide-react";
@@ -23,6 +23,10 @@ type Props = {
 
 function ToolBarLink({ editor }: Props) {
   const [href, setHref] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // check invalid input
+  const isInValidInput = !inputRef.current?.validity.valid;
 
   // set href to the embedded url if selected element is "a"
   const handlePress = () => {
@@ -31,12 +35,14 @@ function ToolBarLink({ editor }: Props) {
     if (editor.isActive("link") && linkAttr.href) {
       setHref(linkAttr.href);
     }
-    console.log("LinkAtt ", linkAttr);
   };
 
   // embed link
   const handleEmbed = () => {
-    if (href === "") return;
+    if (href === "") {
+      editor.chain().unsetLink().run();
+      return;
+    }
 
     editor
       .chain()
@@ -61,24 +67,30 @@ function ToolBarLink({ editor }: Props) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Embed Link</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="space-y-2">
+            <p>Enter URL to Embed</p>
             <Input
-              type="url"
               value={href}
               onChange={(e) => setHref(e.target.value)}
+              type="url"
+              ref={inputRef}
+              placeholder="https://abc.co"
             />
           </DialogDescription>
         </DialogHeader>
-        <DialogClose asChild>
-          <DialogFooter>
+
+        <DialogFooter>
+          <DialogClose asChild>
             <Button type="reset" variant={"secondary"}>
               Close
             </Button>
+          </DialogClose>
+          <DialogClose disabled={isInValidInput} asChild>
             <Button type="submit" onClick={handleEmbed}>
-              Toggle
+              {href === "" ? "Unlink" : "Link"}
             </Button>
-          </DialogFooter>
-        </DialogClose>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

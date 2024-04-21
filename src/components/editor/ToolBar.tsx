@@ -1,5 +1,5 @@
 "use client";
-import { type Editor } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 import {
   AlignCenter,
   AlignLeft,
@@ -7,7 +7,6 @@ import {
   Bold,
   Heading2,
   Italic,
-  Link,
   List,
   ListOrdered,
   Quote,
@@ -28,7 +27,7 @@ export function ToolBar({ editor }: Props) {
   return (
     <div className="border border-input rounded-md sticky top-0 bg-background z-10 flex flex-wrap gap-3 justify-center items-center">
       <ToolBarToggle
-        pressed={editor.isActive("blockQuote")}
+        pressed={editor.isActive("blockquote")}
         onPressedChange={() => editor.chain().toggleBlockquote().run()}
         Icon={Quote}
         onHoverMessage="BlockQuote"
@@ -71,7 +70,7 @@ export function ToolBar({ editor }: Props) {
       />
 
       <ToolBarToggle
-        pressed={editor.isActive("list")}
+        pressed={editor.isActive("bulletList")}
         onPressedChange={() => editor.chain().toggleBulletList().run()}
         Icon={List}
         onHoverMessage="List"
