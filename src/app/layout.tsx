@@ -5,7 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Container from "@/components/ui/container";
 import TopLoader from "@/components/TopLoader";
-import { ThemeProvider } from "@/components/context/Theme";
+
 import ContextProvider from "@/components/context";
 import { Toaster } from "@/components/ui/toaster";
 
