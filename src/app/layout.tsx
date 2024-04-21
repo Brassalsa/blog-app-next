@@ -7,6 +7,7 @@ import Container from "@/components/ui/container";
 import TopLoader from "@/components/TopLoader";
 import { ThemeProvider } from "@/components/context/Theme";
 import ContextProvider from "@/components/context";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
           <TopLoader />
           <Header />
           <Container>{children}</Container>
+          <Toaster />
         </ContextProvider>
       </body>
     </html>
