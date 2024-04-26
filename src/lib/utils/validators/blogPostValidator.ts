@@ -13,6 +13,7 @@ const blogSchema = z.object({
       message: "About section is too short",
     })
     .max(100, { message: "About section is too long, max 100 charactors" }),
+  image: z.string(),
   description: z.string(),
 });
 
