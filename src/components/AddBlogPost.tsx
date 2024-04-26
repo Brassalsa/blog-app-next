@@ -1,7 +1,7 @@
 "use client";
 
 import blogSchema from "@/lib/utils/validators/blogPostValidator";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -61,6 +61,23 @@ function AddBlogPost({ session }: Props) {
                 <FormLabel>About</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Short Summary..." />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="file"
+                    placeholder="Short Summary..."
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
