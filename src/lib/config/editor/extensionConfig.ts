@@ -1,3 +1,4 @@
+import { ImageOptions } from "@tiptap/extension-image";
 import { LinkOptions } from "@tiptap/extension-link";
 import { TextAlignOptions } from "@tiptap/extension-text-align";
 import { StarterKitOptions } from "@tiptap/starter-kit";
@@ -36,5 +37,12 @@ export const textAlignConfig: Partial<TextAlignOptions> = {
 export const linkConfig: Partial<LinkOptions> = {
   HTMLAttributes: {
     class: "text-blue-400 underline",
+  },
+};
+
+export const imageConfig: Partial<ImageOptions> = {
+  HTMLAttributes: {
+    class:
+      "aspect-auto min-h-52 min-w-52 w-[80%] object-contain mx-auto max-w-3xl",
   },
 };
