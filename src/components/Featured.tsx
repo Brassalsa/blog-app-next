@@ -1,18 +1,15 @@
-import React from "react";
+import { getFeaturedPost } from "@/lib/services/server/blog.controller";
 import PostCard from "./PostCard";
-import { ALL_CATEGORIES } from "@/lib/constants";
 
-function Featured() {
+async function Featured() {
+  const res = await getFeaturedPost();
+  if (!res.data) {
+    return;
+  }
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-5">Featured</h2>
-      <PostCard
-        id="123"
-        title="Test post"
-        catg={[ALL_CATEGORIES.tech, ALL_CATEGORIES.food]}
-        date={new Date()}
-        desc=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla architecto error dolor illum odit, necessitatibus perspiciatis ab debitis fugit nam molestias beatae nesciunt soluta consequatur mollitia, esse non exercitationem magni."
-      />
+      <PostCard {...res.data} />
     </div>
   );
 }

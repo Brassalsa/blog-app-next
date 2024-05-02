@@ -2,8 +2,8 @@ import React, { useRef } from "react";
 import ToolBarToggle from "./ToolBarToggle";
 import { type Editor } from "@tiptap/react";
 import { Upload } from "lucide-react";
-import uploadFile from "@/lib/services/cdn/upload";
 import { useToast } from "@/hooks/use-toast";
+import { uploadImage } from "@/lib/services/server/utils";
 
 type Props = {
   editor: Editor;
@@ -14,39 +14,38 @@ function ToolBarImage({ editor }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      const file = e.target.files?.[0];
-      if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      const formData = new FormData();
-      formData.append("image", file);
+    const formData = new FormData();
+    formData.append("image", file);
 
+    toast({
+      title: "File Upload",
+      description: "File upload in progress",
+    });
+
+    const res = await uploadImage(formData, "image");
+    if (!res.data) {
       toast({
         title: "File Upload",
-        description: "File upload in progress",
+        description: res.err,
+        className: "text-red-400",
       });
-
-      const res = await uploadFile(formData, "image");
-
-      toast({
-        title: "File Upload",
-        description: "File uploaded successfully!",
-      });
-
-      editor
-        .chain()
-        .setImage({
-          src: res,
-        })
-        .run();
-    } catch (err: unknown) {
-      toast({
-        title: "Error",
-        description: "File uploading failed.....",
-      });
-
-      console.log(err);
+      return;
     }
+
+    toast({
+      title: "File Upload",
+      description: "File uploaded successfully!",
+    });
+
+    editor
+      .chain()
+      .setImage({
+        src: res.data,
+      })
+      .run();
   };
 
   return (
