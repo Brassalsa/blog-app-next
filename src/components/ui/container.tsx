@@ -6,7 +6,10 @@ type Props = React.ComponentPropsWithoutRef<"div"> & {
 };
 function Container({ children, ...rest }: Props) {
   return (
-    <div {...rest} className={cn("max-w-7xl mx-auto px-2", rest.className)}>
+    <div
+      {...rest}
+      className={cn("max-w-7xl mx-auto px-2 pb-10", rest.className)}
+    >
       {children}
     </div>
   );
