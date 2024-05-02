@@ -11,7 +11,7 @@ export default function Categories() {
 
 // cat list
 type ListProps = React.ComponentPropsWithoutRef<"div"> & {
-  list: ALL_CATEGORIES[];
+  list: string[];
 };
 export function CategList({ list, ...rest }: ListProps) {
   return (
