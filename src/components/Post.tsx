@@ -1,23 +1,61 @@
-import { ALL_CATEGORIES } from "@/lib/constants";
 import React from "react";
 import { CategList } from "./Categories";
+import { formatDate } from "@/lib/utils/helpers";
+import Image from "next/image";
 
-type Props = {
-  id: string;
-  title: string;
-  catg: ALL_CATEGORIES[];
-  desc: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-function Post({ id, title, catg, desc, createdAt, updatedAt }: Props) {
+function Post({
+  id,
+  title,
+  image,
+  about,
+  category,
+  description,
+  createdAt,
+  updatedAt,
+  author,
+}: BlogPostType) {
   return (
-    <div>
-      <h2 className="text">{title}</h2>
-      <span>{createdAt.toDateString()}</span>
-      <CategList list={catg} />
-      <div>{desc}</div>
+    <div key={id} className="flex flex-col">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+        <div className="relative  min-h-52 min-w-52 aspect-video mx-auto">
+          <Image
+            src={image}
+            alt="post-image"
+            sizes="700px"
+            fill
+            className="object-contain rounded-lg"
+          />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text text-3xl font-semibold">{title}</h2>
+          <div className="flex gap-4 items-center text-sm">
+            <CategList list={[category]} />
+            <p className="text-muted-foreground">{formatDate(createdAt)}</p>
+          </div>
+          <div className="flex gap-2">
+            <Image
+              src={author.image}
+              alt="author-image"
+              width={80}
+              height={80}
+              className="object-cover aspect-square size-12 rounded-[1000px]"
+            />
+            <div className="flex flex-col justify-center gap-1 text-sm">
+              <div className="font-semibold">{author.name}</div>
+              <div className="text-xs text-muted-foreground">
+                {author.email}
+              </div>
+            </div>
+          </div>
+          <div className="text-lg ">{about}</div>
+        </div>
+      </div>
+      <div
+        className="text-pretty"
+        dangerouslySetInnerHTML={{
+          __html: description,
+        }}
+      />
     </div>
   );
 }

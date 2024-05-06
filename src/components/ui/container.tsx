@@ -8,7 +8,10 @@ function Container({ children, ...rest }: Props) {
   return (
     <div
       {...rest}
-      className={cn("max-w-7xl mx-auto px-2 pb-10", rest.className)}
+      className={cn(
+        "pb-10 container min-h-fit min-w-full break-words",
+        rest.className
+      )}
     >
       {children}
     </div>

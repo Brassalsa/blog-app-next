@@ -1,20 +1,19 @@
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import React from "react";
 import { CategList } from "./Categories";
-import { links } from "@/lib/routes";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils/helpers";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import Link from "next/link";
+import { links } from "@/lib/routes";
 
-type Props = {
-  id: string;
-  title: string;
-  category: string;
-  about: string;
-  image: string;
-  description: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+export type PostCardProps = BlogPostCard & {
   className?: string;
 };
 
@@ -25,35 +24,39 @@ function PostCard({
   about,
   image,
   createdAt,
-  updatedAt,
   className,
-}: Props) {
+}: PostCardProps) {
   return (
-    <Link
-      href={links.blog(id)}
-      className={cn(
-        "border-4 p-3 max-w-full min-w-72 overflow-ellipsis flex gap-8 rounded-md items-center",
-        className
-      )}
-    >
-      <div className="relative flex-1 min-h-52 aspect-auto  overflow-hidden">
-        <Image
-          src={image}
-          className="object-cover rounded-lg"
-          alt="post-image"
-          fill
-        />
-      </div>
-      <div className="flex flex-col gap-2 flex-1">
-        <h2 className="text-xl font-medium">{title}</h2>
-        <div className="flex gap-2">
-          <CategList list={[category]} />
-          <span className="ml-auto text-muted-foreground text-sm">
-            {formatDate(updatedAt)}
-          </span>
-        </div>
-        <div>{about.substring(0, 50)}...</div>
-      </div>
+    <Link href={links.blog(id)}>
+      <Card
+        className={cn(
+          "w-[85svw] md:w-80 lg:w-[420px] sm:grid grid-cols-2 md:grid-cols-1 items-center justify-center rounded-md  shadow-muted-foreground/30 border",
+          className
+        )}
+      >
+        <CardHeader>
+          <div className="relative md:size-72 lg:size-80 min-w-52 aspect-square w-full hidden sm:block mx-auto">
+            <Image
+              src={image}
+              className="object-cover rounded-lg"
+              sizes="500px"
+              alt="post-image"
+              fill
+            />
+          </div>
+        </CardHeader>
+
+        <CardContent className="truncate flex flex-col gap-2">
+          <CardTitle className="truncate">{title}</CardTitle>
+          <div className="flex gap-2 items-center">
+            <CategList list={[category]} />
+            <span className="text-muted-foreground text-sm">
+              {formatDate(createdAt)}
+            </span>
+          </div>
+          <CardDescription className="truncate">{about}</CardDescription>
+        </CardContent>
+      </Card>
     </Link>
   );
 }
