@@ -49,11 +49,78 @@ export const addBlogPost = asyncHandler(async (formData: FormData) => {
   return res;
 });
 
-// get featured post
-export const getFeaturedPost = asyncHandler(async () => {
+// get post by id
+export const getPostById = asyncHandler(async (id: string) => {
+  const post = await db.post.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      author: {
+        select: {
+          image: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  if (!post) {
+    throw AppError("Post Not Found", 404);
+  }
+
+  return post;
+});
+
+// get latest post
+export const getLatestPost = asyncHandler(async () => {
   const res = await db.post.findFirst({
     orderBy: {
       createdAt: "desc",
+    },
+    select: {
+      id: true,
+      about: true,
+      image: true,
+      category: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          image: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return res;
+});
+
+// get post list
+export const getPostList = asyncHandler(async () => {
+  const res = await db.post.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      about: true,
+      image: true,
+      category: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          image: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 
