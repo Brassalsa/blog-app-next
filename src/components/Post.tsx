@@ -2,6 +2,8 @@ import React from "react";
 import { CategList } from "./Categories";
 import { formatDate } from "@/lib/utils/helpers";
 import Image from "next/image";
+import { UserCircle } from "lucide-react";
+import AuthorUI from "./AuthorUI";
 
 function Post({
   id,
@@ -32,21 +34,7 @@ function Post({
             <CategList list={[category]} />
             <p className="text-muted-foreground">{formatDate(createdAt)}</p>
           </div>
-          <div className="flex gap-2">
-            <Image
-              src={author.image}
-              alt="author-image"
-              width={80}
-              height={80}
-              className="object-cover aspect-square size-12 rounded-[1000px]"
-            />
-            <div className="flex flex-col justify-center gap-1 text-sm">
-              <div className="font-semibold">{author.name}</div>
-              <div className="text-xs text-muted-foreground">
-                {author.email}
-              </div>
-            </div>
-          </div>
+          <AuthorUI author={author} />
           <div className="text-lg ">{about}</div>
         </div>
       </div>

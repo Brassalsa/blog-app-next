@@ -1,7 +1,5 @@
 import PostCard from "./PostCard";
 import ErrorCard from "./ui/error-card";
-import Link from "next/link";
-import { links } from "@/lib/routes";
 
 type Props = {
   data: BlogPostCard | null;
@@ -20,12 +18,10 @@ function LatestPost({ data, err }: Props) {
   return (
     <div className="mb-6">
       <h2 className="text-2xl font-semibold mb-5">Latest</h2>
-      <Link href={links.blog(data.id)}>
-        <PostCard
-          {...data}
-          className=" hover:bg-muted-foreground/30 transition duration-300"
-        />
-      </Link>
+      <PostCard
+        {...data}
+        className=" hover:bg-muted-foreground/30 transition duration-300"
+      />
     </div>
   );
 }

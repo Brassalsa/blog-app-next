@@ -12,6 +12,7 @@ import {
 } from "./ui/card";
 import Link from "next/link";
 import { links } from "@/lib/routes";
+import AuthorUI from "./AuthorUI";
 
 export type PostCardProps = BlogPostCard & {
   className?: string;
@@ -21,6 +22,7 @@ function PostCard({
   id,
   title,
   category,
+  author,
   about,
   image,
   createdAt,
@@ -30,7 +32,7 @@ function PostCard({
     <Link href={links.blog(id)}>
       <Card
         className={cn(
-          "w-[85svw] md:w-80 lg:w-[420px] sm:grid grid-cols-2 md:grid-cols-1 items-center justify-center rounded-md  shadow-muted-foreground/30 border",
+          "w-[85svw] md:w-80 lg:w-[420px] bg-transparent relative sm:grid grid-cols-2 md:grid-cols-1 items-center justify-center rounded-md  shadow-muted-foreground/30 border",
           className
         )}
       >
@@ -48,6 +50,7 @@ function PostCard({
 
         <CardContent className="truncate flex flex-col gap-2">
           <CardTitle className="truncate">{title}</CardTitle>
+          <AuthorUI author={author} />
           <div className="flex gap-2 items-center">
             <CategList list={[category]} />
             <span className="text-muted-foreground text-sm">
