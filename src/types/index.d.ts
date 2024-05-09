@@ -15,11 +15,7 @@ type BlogPostType = {
   authorId: string;
   createdAt: Date | string;
   updatedAt: Date | string;
-  author: {
-    image: string;
-    name: string;
-    email: string;
-  };
+  author: AuthorType;
 };
 
 type BlogPostCard = {
@@ -30,5 +26,11 @@ type BlogPostCard = {
   image: string;
   createdAt: BlogPostType["createdAt"];
   updatedAt: BlogPostType["updatedAt"];
-  author: BlogPostType["author"];
+  author: AuthorType;
+};
+
+type AuthorType = {
+  image: string | null;
+  name: string | null;
+  email: string | null;
 };
