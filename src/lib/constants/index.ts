@@ -4,3 +4,5 @@ export enum ALL_CATEGORIES {
   food = "food",
   other = "other",
 }
+
+export const POST_PER_PAGE = 6;
