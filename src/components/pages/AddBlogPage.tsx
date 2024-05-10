@@ -13,10 +13,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import Editor from "./editor";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import Editor from "../editor";
 import { addBlogPost } from "@/lib/services/server/blog.controller";
 import { useToast } from "@/hooks/use-toast";
 import { ALL_CATEGORIES } from "@/lib/constants";
@@ -28,12 +28,12 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 
 type Props = {
   session: Session;
 };
-function AddBlogPost({ session }: Props) {
+function AddBlogPage({ session }: Props) {
   const { toast } = useToast();
   const [image, setImage] = useState<File>();
   const form = useForm<z.infer<typeof blogSchema>>({
@@ -178,4 +178,4 @@ function AddBlogPost({ session }: Props) {
   );
 }
 
-export default AddBlogPost;
+export default AddBlogPage;

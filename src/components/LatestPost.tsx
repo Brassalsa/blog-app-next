@@ -17,7 +17,7 @@ function LatestPost({ data, err }: Props) {
 
   return (
     <div className="mb-6">
-      <h2 className="text-2xl font-semibold mb-5">Latest</h2>
+      <h2 className="heading mb-5">Latest</h2>
       <PostCard
         {...data}
         className=" hover:bg-muted-foreground/30 transition duration-300"
