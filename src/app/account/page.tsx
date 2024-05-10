@@ -1,4 +1,4 @@
-import AccountPage from "@/components/AccountPage";
+import AccountPage from "@/components/pages/AccountPage";
 import { getSessionOrRedirect } from "@/lib/utils/authUtils";
 
 async function page() {

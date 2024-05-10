@@ -16,7 +16,10 @@ export default async function Home() {
     <main>
       <Hero />
       <LatestPost data={latestPostRes.data} err={latestPostRes.err} />
-      <PostList list={postListRes.data || []} />
+      <div className="space-y-3">
+        <h2 className="heading">Blog Posts</h2>
+        <PostList list={postListRes.data || []} />
+      </div>
     </main>
   );
 }

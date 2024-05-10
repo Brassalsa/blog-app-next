@@ -76,3 +76,10 @@
     text-wrap: wrap;
   }
 }
+
+@layer components {
+  h1,
+  .heading {
+    @apply font-semibold text-xl;
+  }
+}
