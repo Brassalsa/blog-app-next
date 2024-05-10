@@ -6,6 +6,7 @@ import blogSchema from "@/lib/utils/validators/blogPostValidator";
 import db from "../db";
 import { getSessionOrThrow } from "@/lib/utils/authUtils";
 import { uploadImage } from "./utils";
+import { POST_PER_PAGE } from "@/lib/constants";
 
 // add a post
 export const addBlogPost = asyncHandler(async (formData: FormData) => {
@@ -101,28 +102,33 @@ export const getLatestPost = asyncHandler(async () => {
 });
 
 // get post list
-export const getPostList = asyncHandler(async () => {
-  const res = await db.post.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    select: {
-      id: true,
-      about: true,
-      image: true,
-      category: true,
-      title: true,
-      createdAt: true,
-      updatedAt: true,
-      author: {
-        select: {
-          image: true,
-          name: true,
-          email: true,
+export const getPostList = asyncHandler(
+  async (page: number = 1, pageSize: number = POST_PER_PAGE) => {
+    const skip = (page - 1) * pageSize;
+    const res = await db.post.findMany({
+      skip: skip,
+      take: pageSize,
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        about: true,
+        image: true,
+        category: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+        author: {
+          select: {
+            image: true,
+            name: true,
+            email: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return res;
-});
+    return res;
+  }
+);
