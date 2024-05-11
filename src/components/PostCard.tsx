@@ -49,7 +49,7 @@ function PostCard({
         </CardHeader>
 
         <CardContent className="truncate flex flex-col gap-2">
-          <CardTitle className="truncate">{title}</CardTitle>
+          <CardTitle className="truncate text-xl">{title}</CardTitle>
           <AuthorUI author={author} />
           <div className="flex gap-2 items-center">
             <CategList list={[category]} />

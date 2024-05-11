@@ -2,7 +2,6 @@ import React from "react";
 import { CategList } from "./Categories";
 import { formatDate } from "@/lib/utils/helpers";
 import Image from "next/image";
-import { UserCircle } from "lucide-react";
 import AuthorUI from "./AuthorUI";
 
 function Post({
@@ -19,7 +18,7 @@ function Post({
   return (
     <div key={id} className="flex flex-col">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-        <div className="relative  min-h-52 min-w-52 aspect-video mx-auto">
+        <div className="relative  min-h-52 max-w-full aspect-video mx-auto">
           <Image
             src={image}
             alt="post-image"

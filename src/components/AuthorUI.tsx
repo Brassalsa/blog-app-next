@@ -7,10 +7,12 @@ import { cn } from "@/lib/utils";
 type Props = {
   author: AuthorType;
   className?: string;
+
+  withText?: boolean;
 };
-function AuthorUI({ author }: Props) {
+function AuthorUI({ author, className, withText = true }: Props) {
   return (
-    <div className={cn("flex gap-2", author)}>
+    <div className={cn("flex gap-2", className)}>
       {author.image ? (
         <Image
           src={author.image}
@@ -22,12 +24,14 @@ function AuthorUI({ author }: Props) {
       ) : (
         <UserCircle className="size-10" />
       )}
-      <div className="flex flex-col justify-center gap-1 text-sm truncate">
-        <div className="font-semibold truncate">{author.name || "N/A"}</div>
-        <div className="text-xs text-muted-foreground truncate">
-          {author.email || "N/A"}
+      {withText && (
+        <div className="flex flex-col justify-center items-start gap-1 text-sm truncate">
+          <div className="font-semibold truncate">{author.name || "N/A"}</div>
+          <div className="text-xs text-muted-foreground truncate">
+            {author.email || "N/A"}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
