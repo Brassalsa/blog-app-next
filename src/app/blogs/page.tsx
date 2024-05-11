@@ -9,10 +9,13 @@ type Props = {
     page: string | undefined;
   };
 };
+
 async function BlogList({ searchParams }: Props) {
   const { page } = searchParams;
   const currentPage = Number(page) || 1;
-  const res = await getPostList(currentPage, 3);
+  const postPerPage = POST_PER_PAGE;
+
+  const res = await getPostList(currentPage, postPerPage);
   if (!res.data) {
     throw new Error("something went wrong");
   }
@@ -21,7 +24,7 @@ async function BlogList({ searchParams }: Props) {
   return (
     <div className="flex flex-col items gap-4 min-h-[80svh]">
       <div className="flex-1 flex flex-col">
-        <h1 className="heading">Posts</h1>
+        <h1 className="heading">Blog Posts</h1>
         {isEmptyList ? (
           <div className="flex-1 flex justify-center items-center">
             <h1 className="text-2xl heading">Nothing to show</h1>
@@ -31,7 +34,7 @@ async function BlogList({ searchParams }: Props) {
         )}
       </div>
       <PaginationComponent
-        disableNext={isEmptyList || res.data.length < POST_PER_PAGE}
+        disableNext={isEmptyList || res.data.length < postPerPage}
         disableBack={currentPage <= 1}
       />
     </div>

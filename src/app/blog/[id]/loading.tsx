@@ -14,8 +14,8 @@ function Loading() {
           <div className="flex gap-2">
             <Skeleton className="object-cover aspect-square size-12 rounded-[1000px]" />
             <div className="flex flex-col justify-center gap-1 text-sm">
-              <Skeleton className="w-32 rounded-lg" />
-              <Skeleton className="w-32 rounded-lg" />
+              <Skeleton className="w-32 h-4 rounded-lg" />
+              <Skeleton className="w-32 h-4 rounded-lg" />
             </div>
           </div>
           <Skeleton className="w-full h-32" />

@@ -75,11 +75,14 @@
     @apply bg-background text-foreground;
     text-wrap: wrap;
   }
+  .svg {
+    @apply fill-primary;
+  }
 }
 
 @layer components {
   h1,
   .heading {
-    @apply font-semibold text-xl;
+    @apply font-semibold text-xl py-2;
   }
 }
