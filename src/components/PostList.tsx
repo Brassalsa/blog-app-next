@@ -8,10 +8,10 @@ type Props = {
 };
 function PostList({ list }: Props) {
   const renderItem = useCallback(
-    (item: BlogPostCard) => <PostCard {...item} />,
+    ({ item }: { item: BlogPostCard }) => <PostCard {...item} />,
     []
   );
-  return <HoverEffect items={list} listItem={renderItem} />;
+  return <HoverEffect items={list} ListItem={renderItem} />;
 }
 
 export default PostList;
