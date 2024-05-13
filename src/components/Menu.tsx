@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LogOutIcon, MenuIcon, PencilIcon } from "lucide-react";
@@ -64,39 +64,46 @@ export function MenuLinks({
     }
   };
 
+  const MenuItem = useCallback(
+    (props: React.ComponentPropsWithoutRef<"li">) => (
+      <li onClick={handleNavigate} {...props} />
+    ),
+    []
+  );
+
   return (
     <ul
       className={cn(
-        "ml-auto gap-2 justify-center items-center flex relative h-full",
+        "ml-auto gap-2 justify-center items-center flex relative",
         {
-          "flex-col gap-8 *:border-b *:w-full *:text-center pb-7 even:hover:bg-accent":
+          "flex-col  gap-8 *:border-b *:w-full *:text-center pb-7 even:hover:bg-accent h-[100svh] min-h-[300px]":
             isOnMenuSLider,
         },
         className
       )}
     >
-      <li onClick={handleNavigate}>
+      <MenuItem>
         <ThemeToggle withText={isOnMenuSLider} className="border-none" />
-      </li>
-      <li onClick={handleNavigate}>
+      </MenuItem>
+      <MenuItem>
         <ButtonLink href={links.home}>Home</ButtonLink>
-      </li>
-      <li onClick={handleNavigate}>
+      </MenuItem>
+      <MenuItem>
         <ButtonLink href={links.blogs}>Blogs</ButtonLink>
-      </li>
-      <li onClick={handleNavigate}>
+      </MenuItem>
+      <MenuItem>
         <ButtonLink href={links.about}>About</ButtonLink>
-      </li>
+      </MenuItem>
 
       {isLoading && (
-        <li onClick={handleNavigate}>
+        <MenuItem>
           <Skeleton className="h-8 w-16 flex justify-center items-center">
             <ButtonLoading variant={"ghost"} />
           </Skeleton>
-        </li>
+        </MenuItem>
       )}
       {!isLoggedIn && !isLoading && (
-        <li onClick={handleNavigate}>
+        <MenuItem>
           <Button
             onClick={() => {
               router.push(links.signIn);
@@ -104,12 +111,12 @@ export function MenuLinks({
           >
             Signup
           </Button>
-        </li>
+        </MenuItem>
       )}
 
       {isLoggedIn && (
         <>
-          <li onClick={handleNavigate}>
+          <MenuItem>
             <ButtonLink href={links.addBlog}>
               <TooltipComponent showOnHover={() => <p>Add new Post</p>}>
                 <span>
@@ -118,10 +125,10 @@ export function MenuLinks({
                 </span>
               </TooltipComponent>
             </ButtonLink>
-          </li>
+          </MenuItem>
 
           {!isOnMenuSLider && (
-            <li onClick={handleNavigate} className="scale-[80%] translate-y-1">
+            <MenuItem className="scale-[80%] translate-y-1">
               <ButtonLink href={links.account}>
                 <TooltipComponent
                   showOnHover={() => (
@@ -133,14 +140,12 @@ export function MenuLinks({
                   <AuthorUI author={data!.user!} withText={false} />
                 </TooltipComponent>
               </ButtonLink>
-            </li>
+            </MenuItem>
           )}
 
+          <span className="flex-1 border-none max-h-[30%]" />
           {isOnMenuSLider && (
-            <li
-              onClick={handleNavigate}
-              className="absolute bottom-0 flex gap-2 items-center"
-            >
+            <MenuItem className="flex self-end justify-self-end gap-2 items-center">
               <ButtonLink href={links.account}>
                 <AuthorUI author={data!.user!} />
               </ButtonLink>
@@ -148,7 +153,7 @@ export function MenuLinks({
                 <LogOutIcon className="text-red-400" />
                 <span className="sr-only">Log out</span>
               </Button>
-            </li>
+            </MenuItem>
           )}
         </>
       )}
