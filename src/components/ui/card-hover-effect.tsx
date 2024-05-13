@@ -9,13 +9,13 @@ type HoverEffectProps<T> = {
   items: T[];
   className?: string;
   listItemClassName?: ClassNameValue;
-  listItem: (item: T) => React.ReactNode;
+  ListItem: ({ item }: { item: T }) => React.ReactNode;
 };
 
 export function HoverEffect<T>({
   items,
   className,
-  listItem,
+  ListItem,
   listItemClassName,
 }: HoverEffectProps<T>) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -38,7 +38,7 @@ export function HoverEffect<T>({
           }}
           className={listItemClassName}
         >
-          {listItem(item)}
+          <ListItem item={item} />
         </HoverComponent>
       ))}
     </div>
