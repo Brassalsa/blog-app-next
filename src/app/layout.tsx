@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Container from "@/components/ui/container";
-import TopLoader from "@/components/TopLoader";
+import TopLoader from "@/components/ui/top-loader";
 
 import ContextProvider from "@/components/context";
 import { Toaster } from "@/components/ui/toaster";
