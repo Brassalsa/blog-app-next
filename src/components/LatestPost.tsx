@@ -16,7 +16,7 @@ function LatestPost({ data, err }: Props) {
   }
 
   return (
-    <div className="mb-6">
+    <div className="mb-6 w-min">
       <h2 className="heading mb-5">Latest</h2>
       <PostCard
         {...data}
