@@ -42,7 +42,6 @@ export const linkConfig: Partial<LinkOptions> = {
 
 export const imageConfig: Partial<ImageOptions> = {
   HTMLAttributes: {
-    class:
-      "aspect-auto min-h-52 min-w-52 w-[80%] object-contain mx-auto max-w-3xl",
+    class: "desc-img",
   },
 };
