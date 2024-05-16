@@ -1,33 +1,9 @@
 import { MediaLinks } from "@/lib/constants";
-import Image from "next/image";
 import Link from "next/link";
 
 const SocialLinks = ({ withImage = true, withText = false }) => {
   return (
     <>
-      <Link target="_blank" href={MediaLinks.facebook} className="flex gap-1">
-        {withImage && (
-          <Image
-            src="/assets/img/facebook.png"
-            width={24}
-            height={24}
-            alt="img"
-          />
-        )}
-        {withText && <p>Facebook</p>}
-      </Link>
-
-      <Link target="_blank" href={MediaLinks.insta} className="flex gap-1">
-        {withImage && (
-          <Image
-            src="/assets/img/instagram.png"
-            width={24}
-            height={24}
-            alt="img"
-          />
-        )}
-        {withText && <p>Instagram</p>}
-      </Link>
       <Link target="_blank" href={MediaLinks.github} className="flex gap-1">
         {withImage && (
           <svg
