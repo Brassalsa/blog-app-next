@@ -1,3 +1,5 @@
+import { Session } from "next-auth";
+
 type AppResponseType<T> = {
   data: T;
   err: string | null;
@@ -43,4 +45,8 @@ type CommentType = {
   author: AuthorType;
   createdAt: Date | string;
   updatedAt: Date | string;
+};
+
+type AuthSession = Session & {
+  user: NonNullable<Session["user"]>;
 };
