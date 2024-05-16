@@ -132,3 +132,38 @@ export const getPostList = asyncHandler(
     return res;
   }
 );
+
+// get post by category
+export const getPostListByCategory = asyncHandler(
+  async (cat: string, page: number = 1, pageSize: number = POST_PER_PAGE) => {
+    const skip = (page - 1) * pageSize;
+    const res = await db.post.findMany({
+      skip: skip,
+      take: pageSize,
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        category: cat,
+      },
+      select: {
+        id: true,
+        about: true,
+        image: true,
+        category: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+        author: {
+          select: {
+            image: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return res;
+  }
+);
