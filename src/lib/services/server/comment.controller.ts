@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import { links } from "@/lib/routes";
 import { getUserIdByEmailOrThrow } from "./helpers";
 
+// add a comment
 export const addComment = asyncHandler(
   async (postId: string, comment: string) => {
     const { user: authUser } = await getSessionOrThrow();
@@ -35,6 +36,7 @@ export const addComment = asyncHandler(
   }
 );
 
+// delete comment
 export const deleteComment = asyncHandler(
   async (commentId: string, postId: string) => {
     const { user: authUser } = await getSessionOrThrow();
@@ -63,6 +65,7 @@ export const deleteComment = asyncHandler(
   }
 );
 
+// edit comment
 export const editComment = asyncHandler(
   async (commentId: string, postId: string, payload: string) => {
     const { user: authUser } = await getSessionOrThrow();
@@ -89,9 +92,29 @@ export const editComment = asyncHandler(
         comment: payload,
       },
     });
-
     revalidatePath(links.blog(postId));
-
     return AppResponse("comment updated successfully", 201);
   }
 );
+
+export const getCommentsByPostId = asyncHandler(async (postId: string) => {
+  const comments = await db.comment.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    where: {
+      postId,
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          email: true,
+          image: true,
+          name: true,
+        },
+      },
+    },
+  });
+  return comments;
+});

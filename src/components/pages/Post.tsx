@@ -15,7 +15,6 @@ function Post({
   createdAt,
   updatedAt,
   author,
-  comments,
 }: BlogPostType) {
   return (
     <div key={id} className="flex flex-col">
@@ -45,7 +44,7 @@ function Post({
           __html: description,
         }}
       />
-      <Comments comments={comments} postId={id} />
+      <Comments postId={id} />
     </div>
   );
 }

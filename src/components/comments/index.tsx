@@ -1,36 +1,22 @@
-"use client";
-
-import { useSession } from "next-auth/react";
-import React from "react";
-
-import ButtonLink from "../ui/buttonLink";
-
-import { cn } from "@/lib/utils";
-import { links } from "@/lib/routes";
-
-import CommentList from "./CommentList";
 import WriteComment from "./WriteComment";
+import GetCommentsList from "./GetCommentList";
+import { cn } from "@/lib/utils";
+import { Suspense } from "react";
+import CommentLoader from "./CommentLoader";
 
 type Props = {
   postId: string;
   className?: string;
-  comments: CommentType[];
 };
 
-export default function Comments({ comments, className, postId }: Props) {
-  const { status } = useSession();
-
+export default function Comments({ className, postId }: Props) {
   return (
     <div className={cn("mt-10 w-full space-y-4", className)}>
       <h2 className="heading">Comments</h2>
-      {status === "authenticated" ? (
-        <WriteComment postId={postId} />
-      ) : (
-        <ButtonLink href={links.signIn} className="text-center w-full">
-          <h1>Login to write comments</h1>
-        </ButtonLink>
-      )}
-      <CommentList comments={comments} />
+      <WriteComment postId={postId} />
+      <Suspense fallback={<CommentLoader />}>
+        <GetCommentsList postId={postId} />
+      </Suspense>
     </div>
   );
 }

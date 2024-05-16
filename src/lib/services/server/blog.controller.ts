@@ -64,14 +64,6 @@ export const getPostById = asyncHandler(async (id: string) => {
           email: true,
         },
       },
-      comments: {
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          author: true,
-        },
-      },
     },
   });
 

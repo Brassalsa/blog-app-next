@@ -1,12 +1,18 @@
+"use client";
+
 import { useToast } from "@/hooks/use-toast";
 import { addComment } from "@/lib/services/server/comment.controller";
 import { useState } from "react";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import { useSession } from "next-auth/react";
+import ButtonLink from "../ui/buttonLink";
+import { links } from "@/lib/routes";
 
 export default function WriteComment({ postId }: { postId: string }) {
   const { toast } = useToast();
+  const { status } = useSession();
   const [comment, setComment] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -32,6 +38,14 @@ export default function WriteComment({ postId }: { postId: string }) {
       setComment("");
     }
   };
+
+  if (status !== "authenticated") {
+    return (
+      <ButtonLink href={links.signIn} className="text-center w-full">
+        <h1>Login to write comments</h1>
+      </ButtonLink>
+    );
+  }
 
   return (
     <div className="max-w-5xl">
