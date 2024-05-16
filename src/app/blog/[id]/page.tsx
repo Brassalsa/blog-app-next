@@ -1,4 +1,4 @@
-import Post from "@/components/Post";
+import Post from "@/components/pages/Post";
 import { getPostById } from "@/lib/services/server/blog.controller";
 import { notFound } from "next/navigation";
 import React from "react";
