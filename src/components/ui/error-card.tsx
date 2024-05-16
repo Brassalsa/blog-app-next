@@ -24,7 +24,11 @@ function ErrorCard({ title, description, className, children }: Props) {
 }
 
 ErrorCard.Title = ({ children }: { children?: React.ReactNode }) => {
-  return <CardTitle className="text-center">{children || "Error"}</CardTitle>;
+  return (
+    <CardTitle className="text-center text-red-400">
+      {children || "Error"}
+    </CardTitle>
+  );
 };
 ErrorCard.Description = ({ children }: { children?: React.ReactNode }) => {
   return (
