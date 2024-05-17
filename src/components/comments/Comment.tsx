@@ -2,6 +2,7 @@ import { formatDate } from "@/lib/utils/helpers";
 import AuthorUI from "../AuthorUI";
 import { Card, CardContent, CardDescription } from "../ui/card";
 import CommentMenu from "./CommentMenu";
+import { CommentType } from "@/types";
 
 export default function Comment({
   comment,

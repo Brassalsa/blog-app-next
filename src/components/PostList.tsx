@@ -2,6 +2,7 @@
 import { HoverEffect } from "./ui/card-hover-effect";
 import PostCard from "./PostCard";
 import { useCallback } from "react";
+import { BlogPostCard } from "@/types";
 
 type Props = {
   list: BlogPostCard[];

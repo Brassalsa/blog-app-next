@@ -11,6 +11,7 @@ import {
 } from "../ui/alert-dialog";
 import { deleteComment } from "@/lib/services/server/comment.controller";
 import { Button } from "../ui/button";
+import { CommentType } from "@/types";
 
 export default function DeleteComment({ comment }: { comment: CommentType }) {
   const { toast } = useToast();

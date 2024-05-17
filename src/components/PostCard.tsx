@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { links } from "@/lib/routes";
 import AuthorUI from "./AuthorUI";
+import { BlogPostCard } from "@/types";
 
 export type PostCardProps = BlogPostCard & {
   className?: string;

@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { Ellipsis } from "lucide-react";
 import EditComment from "./EditComment";
 import DeleteComment from "./DeleteComment";
+import { CommentType } from "@/types";
 
 type MenuProps = {
   comment: CommentType;

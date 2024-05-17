@@ -1,5 +1,6 @@
 import { ZodError } from "zod";
 import { AppError, AppResponse } from "./formatter";
+import { AppResponseType } from "@/types";
 
 type AsyncFunctionType<T extends unknown[], R> = (
   ...args: T

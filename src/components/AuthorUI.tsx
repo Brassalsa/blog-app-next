@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 
 import { cn } from "@/lib/utils";
+import { AuthorType } from "@/types";
 
 type Props = {
   author: AuthorType;

@@ -13,6 +13,7 @@ import {
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { editComment } from "@/lib/services/server/comment.controller";
+import { CommentType } from "@/types";
 
 export default function EditComment({ comment }: { comment: CommentType }) {
   const { toast } = useToast();
