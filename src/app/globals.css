@@ -86,6 +86,6 @@
     @apply font-semibold text-xl py-2;
   }
   .desc-img {
-    @apply aspect-auto min-h-52 min-w-52 w-[80%] object-contain mx-auto max-w-3xl my-3 rounded-lg hover:scale-[1.02] transition;
+    @apply aspect-auto min-h-52 min-w-52 w-[80%] object-contain mx-auto max-w-3xl my-3 rounded-lg;
   }
 }

@@ -24,7 +24,7 @@ async function Category({ params, searchParams }: Props) {
 
   return (
     <BlogListPage
-      title={cat}
+      title={"category list " + `"${cat}"`}
       posts={res.data}
       disableNext={res.data.length === 0 || res.data.length < postPerPage}
       disablePrev={currentPage <= 1}
