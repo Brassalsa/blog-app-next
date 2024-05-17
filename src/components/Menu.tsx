@@ -104,13 +104,17 @@ export function MenuLinks({
       )}
       {!isLoggedIn && !isLoading && (
         <MenuItem>
-          <Button
+          <button
+            className="p-[3px] relative"
             onClick={() => {
               router.push(links.signIn);
             }}
           >
-            Signup
-          </Button>
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+            <div className=" px-3 py-1  bg-background rounded-[6px]  relative group transition duration-200 hover:text-white hover:bg-transparent">
+              Sign-in
+            </div>
+          </button>
         </MenuItem>
       )}
 

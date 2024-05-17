@@ -5,6 +5,7 @@ import {
   getPostList,
 } from "@/lib/services/server/blog.controller";
 import PostList from "@/components/PostList";
+import AllCategories from "@/components/Categories";
 
 export default async function Home() {
   const [latestPostRes, postListRes] = await Promise.all([
@@ -15,7 +16,10 @@ export default async function Home() {
   return (
     <main>
       <Hero />
-      <LatestPost data={latestPostRes.data} err={latestPostRes.err} />
+      <div className="flex gap-10">
+        <LatestPost data={latestPostRes.data} err={latestPostRes.err} />
+        <AllCategories />
+      </div>
       <div className="space-y-3">
         <h2 className="heading">Blog Posts</h2>
         <PostList list={postListRes.data || []} />

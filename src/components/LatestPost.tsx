@@ -1,6 +1,7 @@
 import { BlogPostCard } from "@/types";
 import PostCard from "./PostCard";
 import ErrorCard from "./ui/error-card";
+import { BackgroundGradient } from "./ui/background-gradient";
 
 type Props = {
   data: BlogPostCard | null;
@@ -19,10 +20,9 @@ function LatestPost({ data, err }: Props) {
   return (
     <div className="mb-6 w-min">
       <h2 className="heading mb-5">Latest</h2>
-      <PostCard
-        {...data}
-        className=" hover:bg-muted-foreground/30 transition duration-300"
-      />
+      <BackgroundGradient className="rounded-[22px] p-1  bg-background">
+        <PostCard {...data} className="border-none shadow-none" />
+      </BackgroundGradient>
     </div>
   );
 }

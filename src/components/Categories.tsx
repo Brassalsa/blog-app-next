@@ -3,13 +3,31 @@
 import { ALL_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { Card } from "./ui/card";
+import { Card, CardContent, CardHeader } from "./ui/card";
 import Link from "next/link";
 import { links } from "@/lib/routes";
+import { BackgroundGradient } from "./ui/background-gradient";
+import { HoverBorderGradient } from "./ui/hover-border-gradient";
 
 // all cat list
-export default function Categories() {
-  return Object.keys(ALL_CATEGORIES).map((i) => <CategCard key={i} text={i} />);
+export default function AllCategories() {
+  return (
+    <Card className=" hidden md:block max-w-xl pl-6 w-full">
+      <CardHeader className="heading p-0 mb-5">All Categories</CardHeader>
+      <CardContent className="flex flex-wrap justify-between items-center gap-y-10">
+        {Object.keys(ALL_CATEGORIES).map((i) => (
+          <Link href={links.blogCat(i)} key={i}>
+            <HoverBorderGradient>
+              <CategCard
+                className="border-none transition hover:bg-none"
+                text={i}
+              />
+            </HoverBorderGradient>
+          </Link>
+        ))}
+      </CardContent>
+    </Card>
+  );
 }
 
 // cat list
@@ -39,11 +57,6 @@ type CardProps = React.ComponentPropsWithoutRef<"div"> & {
 };
 
 export function CategCard({ text, ...rest }: CardProps) {
-  if (!(text in ALL_CATEGORIES)) {
-    console.warn("category not found! ", text);
-    return;
-  }
-
   return (
     <Card
       {...rest}

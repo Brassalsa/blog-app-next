@@ -9,7 +9,9 @@ type Props = {
 };
 function PostList({ list }: Props) {
   const renderItem = useCallback(
-    ({ item }: { item: BlogPostCard }) => <PostCard {...item} />,
+    ({ item }: { item: BlogPostCard }) => (
+      <PostCard className="bg-background m-2" {...item} />
+    ),
     []
   );
   return <HoverEffect items={list} ListItem={renderItem} />;
