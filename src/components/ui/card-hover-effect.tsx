@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { ClassNameValue } from "tailwind-merge";
+import { BackgroundGradient } from "./background-gradient";
 
 type HoverEffectProps<T> = {
   items: T[];
