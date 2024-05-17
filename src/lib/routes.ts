@@ -6,4 +6,5 @@ export const links = {
   about: "/about",
   account: "/account",
   signIn: "/sign-in",
+  blogCat: (cat: string) => "/blogs/category/" + cat,
 };

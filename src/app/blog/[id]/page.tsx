@@ -1,4 +1,4 @@
-import Post from "@/components/pages/Post";
+import BlogPostPage from "@/components/pages/BlogPostPage";
 import { getPostById } from "@/lib/services/server/blog.controller";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -13,7 +13,7 @@ async function BlogPost({ params }: Props) {
   if (!res.data) {
     return notFound();
   }
-  return <Post {...res.data} />;
+  return <BlogPostPage {...res.data} />;
 }
 
 export default BlogPost;

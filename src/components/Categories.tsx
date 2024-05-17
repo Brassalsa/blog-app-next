@@ -3,6 +3,9 @@
 import { ALL_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { Card } from "./ui/card";
+import Link from "next/link";
+import { links } from "@/lib/routes";
 
 // all cat list
 export default function Categories() {
@@ -12,13 +15,20 @@ export default function Categories() {
 // cat list
 type ListProps = React.ComponentPropsWithoutRef<"div"> & {
   list: string[];
+  asLink?: boolean;
 };
-export function CategList({ list, ...rest }: ListProps) {
+export function CategList({ list, asLink = false, ...rest }: ListProps) {
   return (
     <div {...rest} className={cn("flex gap-2 flex-wrap", rest.className)}>
-      {list.map((i) => (
-        <CategCard key={i} text={i} />
-      ))}
+      {list.map((i) =>
+        asLink ? (
+          <Link href={links.blogCat(i)} key={i}>
+            <CategCard text={i} />
+          </Link>
+        ) : (
+          <CategCard key={i} text={i} />
+        )
+      )}
     </div>
   );
 }
@@ -35,7 +45,7 @@ export function CategCard({ text, ...rest }: CardProps) {
   }
 
   return (
-    <div
+    <Card
       {...rest}
       className={cn(
         "first-letter:uppercase text-sm px-2 py-1 border w-fit rounded-md text-muted-foreground",
@@ -43,6 +53,6 @@ export function CategCard({ text, ...rest }: CardProps) {
       )}
     >
       {ALL_CATEGORIES[text as ALL_CATEGORIES]}
-    </div>
+    </Card>
   );
 }
