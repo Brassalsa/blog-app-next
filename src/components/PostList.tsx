@@ -10,7 +10,7 @@ type Props = {
 function PostList({ list }: Props) {
   const renderItem = useCallback(
     ({ item }: { item: BlogPostCard }) => (
-      <PostCard className="bg-background m-2" {...item} />
+      <PostCard className="bg-background m-1" {...item} />
     ),
     []
   );
