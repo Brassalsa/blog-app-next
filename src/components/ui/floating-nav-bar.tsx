@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import {
   motion,
   AnimatePresence,
@@ -27,7 +26,9 @@ export const FloatingNav = ({
     // Check if current is not undefined and is a number
     if (typeof current === "number") {
       let direction = current! - scrollYProgress.getPrevious()!;
-      if (scrollYProgress.get() < 0.05) {
+      if (current === 1) {
+        setVisible(true);
+      } else if (scrollYProgress.get() < 0.05) {
         setVisible(true);
       } else {
         if (direction < 0) {
@@ -40,7 +41,7 @@ export const FloatingNav = ({
   });
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="sync">
       <motion.div
         initial={{
           opacity: 1,

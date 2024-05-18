@@ -5,7 +5,7 @@ import Image from "next/image";
 function Hero() {
   return (
     <div className="flex gap-8 justify-center items-center min-h-96">
-      <div className="relative size-0 sm:size-36 md:size-52 lg:size-64 rounded-full overflow-hidden aspect-square">
+      <div className="relative flex-shrink-0 size-0 sm:size-36 md:size-52 lg:size-64 rounded-full overflow-hidden aspect-square">
         <Image
           src="https://avatars.githubusercontent.com/u/65347944?v=4"
           alt="user image"
