@@ -1,3 +1,5 @@
+import { AppResponseType } from "@/types";
+
 function AppResponse<T>(data: T, statusCode = 200): AppResponseType<T> {
   return {
     data: data,
