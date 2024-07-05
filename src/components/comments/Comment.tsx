@@ -16,7 +16,7 @@ export default function Comment({
       <CardContent className="border flex flex-col gap-2 justify-center py-3 rounded-lg relative">
         <div className="flex gap-2">
           <div className="flex-1 flex gap-2 flex-wrap items-center">
-            <AuthorUI author={comment.author} />
+            <AuthorUI author={comment.author} isLink />
             <p className="text-xs text-muted-foreground">
               {formatDate(comment.createdAt)}
             </p>

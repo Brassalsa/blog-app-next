@@ -25,8 +25,6 @@ export default function CommentMenu({ comment }: MenuProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Comment menu</DropdownMenuLabel>
-
         <DropdownMenuItem asChild>
           <EditComment comment={comment} />
         </DropdownMenuItem>
