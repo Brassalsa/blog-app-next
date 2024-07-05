@@ -2,15 +2,14 @@
 
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ClassNameValue } from "tailwind-merge";
-import { BackgroundGradient } from "./background-gradient";
 
 type HoverEffectProps<T> = {
   items: T[];
   className?: string;
   listItemClassName?: ClassNameValue;
-  ListItem: ({ item }: { item: T }) => React.ReactNode;
+  ListItem: React.FC<{ item: T }>;
 };
 
 export function HoverEffect<T>({
@@ -20,6 +19,7 @@ export function HoverEffect<T>({
   listItemClassName,
 }: HoverEffectProps<T>) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   return (
     <div
       className={cn(
@@ -38,6 +38,7 @@ export function HoverEffect<T>({
             setHoveredIndex(null);
           }}
           className={listItemClassName}
+          memoDeps={[item]}
         >
           <ListItem item={item} />
         </HoverComponent>
@@ -52,6 +53,7 @@ type Props = {
   onEnter: () => void;
   onLeave: () => void;
   isActive: boolean;
+  memoDeps: any[];
 };
 export const HoverComponent = ({
   className,
@@ -59,7 +61,9 @@ export const HoverComponent = ({
   onEnter,
   onLeave,
   isActive = false,
+  memoDeps = [],
 }: Props) => {
+  const Child = useCallback(() => children, memoDeps);
   return (
     <div
       className="flex items-center md:p-4 pb-4 w-full"
@@ -84,7 +88,7 @@ export const HoverComponent = ({
             />
           )}
         </AnimatePresence>
-        {children}
+        <Child />
       </div>
     </div>
   );
