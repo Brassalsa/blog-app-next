@@ -1,20 +1,21 @@
 "use client";
 import { HoverEffect } from "./ui/card-hover-effect";
-import PostCard from "./PostCard";
-import { useCallback } from "react";
+import PostCard, { PostCardLoading } from "./PostCard";
 import { BlogPostCard } from "@/types";
+import MultiplyNode from "./ui/multiply-node";
+import { POST_PER_PAGE } from "@/lib/constants";
 
 type Props = {
   list: BlogPostCard[];
+  showMenu?: boolean;
 };
-function PostList({ list }: Props) {
-  const renderItem = useCallback(
-    ({ item }: { item: BlogPostCard }) => (
-      <PostCard className="bg-background m-1" {...item} />
-    ),
-    []
+export default function PostList({ list, showMenu }: Props) {
+  const renderItem = ({ item }: { item: BlogPostCard }) => (
+    <PostCard className="bg-background m-1" {...item} />
   );
   return <HoverEffect items={list} ListItem={renderItem} />;
 }
 
-export default PostList;
+export function PostListLoading() {
+  return <MultiplyNode node={<PostCardLoading />} times={POST_PER_PAGE} />;
+}

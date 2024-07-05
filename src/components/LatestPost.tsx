@@ -1,3 +1,5 @@
+"use client";
+
 import { BlogPostCard } from "@/types";
 import PostCard from "./PostCard";
 import ErrorCard from "./ui/error-card";

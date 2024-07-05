@@ -1,15 +1,22 @@
-import { BlogPostType } from "@/types";
+import { BlogPostCard } from "@/types";
 import React from "react";
 import PaginationComponent from "../PaginationComponent";
 import PostList from "../PostList";
 
 type Props = {
   title: string;
-  posts: BlogPostType[];
+  posts: BlogPostCard[];
   disableNext: boolean;
   disablePrev: boolean;
+  showMenu?: boolean;
 };
-function BlogListPage({ title, posts, disableNext, disablePrev }: Props) {
+function BlogListPage({
+  title,
+  posts,
+  disableNext,
+  disablePrev,
+  showMenu,
+}: Props) {
   return (
     <div className="flex flex-col items gap-4 min-h-[80svh]">
       <div className="flex-1 flex flex-col">
@@ -19,7 +26,7 @@ function BlogListPage({ title, posts, disableNext, disablePrev }: Props) {
             <h1 className="text-2xl heading">Nothing to show</h1>
           </div>
         ) : (
-          <PostList list={posts} />
+          <PostList list={posts} showMenu={showMenu} />
         )}
       </div>
       <PaginationComponent

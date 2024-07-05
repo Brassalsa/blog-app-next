@@ -35,7 +35,7 @@ function BlogPostPage({
             <CategList list={[category]} asLink />
             <p className="text-muted-foreground">{formatDate(createdAt)}</p>
           </div>
-          <AuthorUI author={author} />
+          <AuthorUI author={author} isLink />
           <div className="text-lg ">{about}</div>
         </div>
       </div>

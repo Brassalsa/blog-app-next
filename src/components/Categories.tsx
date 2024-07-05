@@ -17,9 +17,9 @@ export default function AllCategories() {
       <CardContent className="flex flex-wrap justify-between items-center gap-y-10">
         {Object.keys(ALL_CATEGORIES).map((i) => (
           <Link href={links.blogCat(i)} key={i}>
-            <HoverBorderGradient>
+            <HoverBorderGradient className="bg-background group">
               <CategCard
-                className="border-none transition hover:bg-none"
+                className="border-none transition hover:bg-none shadow-none group-hover:text-primary"
                 text={i}
               />
             </HoverBorderGradient>
@@ -41,7 +41,12 @@ export function CategList({ list, asLink = false, ...rest }: ListProps) {
       {list.map((i) =>
         asLink ? (
           <Link href={links.blogCat(i)} key={i}>
-            <CategCard text={i} />
+            <HoverBorderGradient className="bg-background group">
+              <CategCard
+                className="border-none transition hover:bg-none shadow-none group-hover:text-primary"
+                text={i}
+              />
+            </HoverBorderGradient>
           </Link>
         ) : (
           <CategCard key={i} text={i} />

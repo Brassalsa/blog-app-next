@@ -4,25 +4,33 @@ import {
   getLatestPost,
   getPostList,
 } from "@/lib/services/server/blog.controller";
-import PostList from "@/components/PostList";
+import PostList, { PostListLoading } from "@/components/PostList";
 import AllCategories from "@/components/Categories";
+import StreamComp from "@/components/ui/stream-comp";
 
 export default async function Home() {
-  const [latestPostRes, postListRes] = await Promise.all([
-    await getLatestPost(),
-    await getPostList(),
-  ]);
-
   return (
     <main>
       <Hero />
       <div className="flex gap-10">
-        <LatestPost data={latestPostRes.data} err={latestPostRes.err} />
+        <StreamComp
+          fallback={<PostListLoading />}
+          AsyncComp={async () => {
+            const res = await getLatestPost();
+            return <LatestPost data={res.data} err={res.err} />;
+          }}
+        />
         <AllCategories />
       </div>
       <div className="space-y-3">
         <h2 className="heading">Blog Posts</h2>
-        <PostList list={postListRes.data || []} />
+        <StreamComp
+          fallback={<PostListLoading />}
+          AsyncComp={async () => {
+            const res = await getPostList();
+            return <PostList list={res.data || []} />;
+          }}
+        />
       </div>
     </main>
   );
