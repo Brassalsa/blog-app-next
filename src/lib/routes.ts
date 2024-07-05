@@ -5,6 +5,7 @@ export const links = {
   addBlog: "/blog/add",
   about: "/about",
   account: "/account",
+  accountId: (id: string) => "/account/" + id,
   signIn: "/sign-in",
   blogCat: (cat: string) => "/blogs/category/" + cat,
 };

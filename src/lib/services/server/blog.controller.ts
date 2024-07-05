@@ -59,6 +59,7 @@ export const getPostById = asyncHandler(async (id: string) => {
     include: {
       author: {
         select: {
+          id: true,
           image: true,
           name: true,
           email: true,
@@ -90,6 +91,7 @@ export const getLatestPost = asyncHandler(async () => {
       updatedAt: true,
       author: {
         select: {
+          id: true,
           image: true,
           name: true,
           email: true,
@@ -121,6 +123,7 @@ export const getPostList = asyncHandler(
         updatedAt: true,
         author: {
           select: {
+            id: true,
             image: true,
             name: true,
             email: true,
@@ -156,6 +159,47 @@ export const getPostListByCategory = asyncHandler(
         updatedAt: true,
         author: {
           select: {
+            id: true,
+            image: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return res;
+  }
+);
+
+// get account posts by id
+export const getAccoutPosts = asyncHandler(
+  async (
+    accountId: string,
+    page: number = 1,
+    pageSize: number = POST_PER_PAGE
+  ) => {
+    const skip = (page - 1) * pageSize;
+    const res = await db.post.findMany({
+      skip: skip,
+      take: pageSize,
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        authorId: accountId,
+      },
+      select: {
+        id: true,
+        about: true,
+        image: true,
+        category: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+        author: {
+          select: {
+            id: true,
             image: true,
             name: true,
             email: true,
