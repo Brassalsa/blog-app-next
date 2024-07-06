@@ -1,8 +1,11 @@
+"use client";
 import { formatDate } from "@/lib/utils/helpers";
 import AuthorUI from "../AuthorUI";
 import { Card, CardContent, CardDescription } from "../ui/card";
 import CommentMenu from "./CommentMenu";
 import { CommentType } from "@/types";
+import { useState } from "react";
+import ShowMore from "../ui/show-more";
 
 export default function Comment({
   comment,
@@ -11,6 +14,7 @@ export default function Comment({
   comment: CommentType;
   showMenu?: boolean;
 }) {
+  const [showMore, setShowMore] = useState(false);
   return (
     <Card className="my-3">
       <CardContent className="border flex flex-col gap-2 justify-center py-3 rounded-lg relative">
@@ -23,8 +27,9 @@ export default function Comment({
           </div>
           {showMenu && <CommentMenu comment={comment} />}
         </div>
+
         <CardDescription className="text-secondary-foreground">
-          {comment.comment}
+          <ShowMore text={comment.comment} maxLength={200} />
         </CardDescription>
       </CardContent>
     </Card>
