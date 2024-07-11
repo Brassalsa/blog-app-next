@@ -7,6 +7,7 @@ import db from "../db";
 import { getSessionOrThrow } from "@/lib/utils/authUtils";
 import { uploadImage } from "./utils";
 import { POST_PER_PAGE } from "@/lib/constants";
+import { revalidatePath } from "next/cache";
 
 // add a post
 export const addBlogPost = asyncHandler(async (formData: FormData) => {
@@ -211,3 +212,33 @@ export const getAccoutPosts = asyncHandler(
     return res;
   }
 );
+
+// delete a post
+export const deletePost = asyncHandler(async (postId: string) => {
+  const { user } = await getSessionOrThrow();
+  const postIdInDb = await db.post.findUnique({
+    where: {
+      id: postId,
+      author: {
+        email: user.email,
+      },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!postIdInDb) {
+    throw AppError("Post not found", 404);
+  }
+
+  await db.post.delete({
+    where: {
+      id: postIdInDb.id,
+    },
+  });
+
+  revalidatePath("/");
+
+  return "Deleted Successfully";
+});
