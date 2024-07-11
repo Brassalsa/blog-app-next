@@ -20,7 +20,7 @@ const AuthorUI = React.forwardRef<any, Props>(
       <Comp
         href={links.accountId(author.id!)}
         className={cn(
-          "flex gap-2",
+          "flex gap-2 max-w-fit",
           {
             group: isLink,
           },

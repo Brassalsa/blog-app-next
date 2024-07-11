@@ -33,6 +33,7 @@ import {
 type Props = {
   session: Session;
 };
+
 function AddBlogPage({ session }: Props) {
   const { toast } = useToast();
   const [image, setImage] = useState<File>();
@@ -80,10 +81,26 @@ function AddBlogPage({ session }: Props) {
     console.log(res);
   };
 
+  const onInvalid = (v: any) => {
+    if (!v) {
+      return;
+    }
+
+    const keys = Object.keys(v);
+    toast({
+      title: "Add Post",
+      description: v[keys[0]].message,
+      className: "text-red-400",
+    });
+  };
+
   return (
     <div>
       <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="space-y-4"
+          onSubmit={form.handleSubmit(onSubmit, onInvalid)}
+        >
           <FormField
             control={form.control}
             name="title"
