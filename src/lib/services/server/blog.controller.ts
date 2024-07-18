@@ -2,34 +2,17 @@
 
 import asyncHandler from "@/lib/utils/asyncHandler";
 import { AppError } from "@/lib/utils/formatter";
-import blogSchema from "@/lib/utils/validators/blogPostValidator";
 import db from "../db";
 import { getSessionOrThrow } from "@/lib/utils/authUtils";
 import { uploadImage } from "./utils";
 import { POST_PER_PAGE } from "@/lib/constants";
 import { revalidatePath } from "next/cache";
+import { verifyBlogPostForm } from "./helpers";
 
 // add a post
 export const addBlogPost = asyncHandler(async (formData: FormData) => {
   const { user } = await getSessionOrThrow();
-
-  const title = formData.get("title")?.toString();
-  const category = formData.get("category")?.toString();
-  const about = formData.get("about")?.toString();
-  const image = formData.get("image") as File | unknown;
-  const description = formData.get("description")?.toString();
-
-  if (!(image instanceof File)) {
-    throw AppError("Invalid Image File", 400);
-  }
-
-  const safeData = blogSchema.parse({
-    title,
-    category,
-    about,
-    image,
-    description,
-  });
+  const safeData = verifyBlogPostForm(formData);
 
   const imageUrl = await uploadImage(formData, "image");
   if (!imageUrl.data) {
@@ -240,5 +223,51 @@ export const deletePost = asyncHandler(async (postId: string) => {
 
   revalidatePath("/");
 
-  return "Deleted Successfully";
+  return "deleted successfully";
 });
+
+// edit post
+export const editPost = asyncHandler(
+  async (postId: string, formData: FormData) => {
+    const safeData = verifyBlogPostForm(formData);
+    const { user } = await getSessionOrThrow();
+    const postIdInDb = await db.post.findUnique({
+      where: {
+        id: postId,
+        author: {
+          email: user.email,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!postIdInDb) {
+      throw AppError("post not found", 404);
+    }
+
+    const img = formData.get("image") as File | string;
+    let imgUrl = "";
+    if (img instanceof File) {
+      let res = await uploadImage(formData, "image");
+      if (!res.data) {
+        throw AppError(res.err!, res.statusCode);
+      }
+      imgUrl = res.data;
+    } else {
+      imgUrl = img;
+    }
+    await db.post.update({
+      where: {
+        id: postIdInDb.id,
+      },
+      data: {
+        ...safeData,
+        image: imgUrl,
+      },
+    });
+    revalidatePath("/");
+    return "updated successfully";
+  }
+);
