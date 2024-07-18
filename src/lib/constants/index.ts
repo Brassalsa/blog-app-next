@@ -1,3 +1,5 @@
+import { checkEnvOrThrow } from "../utils/helpers";
+
 export enum ALL_CATEGORIES {
   style = "style",
   tech = "tech",
@@ -17,3 +19,5 @@ export const MediaLinks = {
   github: "https://github.com/Brassalsa",
   twitter: "https://twitter.com/Sauravc64320635",
 };
+
+export const CDNHost = checkEnvOrThrow(process.env.CDN_HOST);
