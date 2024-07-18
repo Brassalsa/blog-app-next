@@ -20,4 +20,4 @@ export const MediaLinks = {
   twitter: "https://twitter.com/Sauravc64320635",
 };
 
-export const CDNHost = checkEnvOrThrow(process.env.CDN_HOST);
+export const CDNHost = "cloudinary.com";
