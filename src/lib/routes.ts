@@ -3,6 +3,7 @@ export const links = {
   blogs: "/blogs",
   blog: (id: string) => "/blog/" + id,
   addBlog: "/blog/add",
+  editBlog: (id: string) => "/blog/edit/" + id,
   about: "/about",
   account: "/account",
   accountId: (id: string) => "/account/" + id,
