@@ -7,12 +7,19 @@ import { POST_PER_PAGE } from "@/lib/constants";
 
 type Props = {
   list: BlogPostCard[];
-  showMenu?: boolean;
+  Item?: React.FC<BlogPostCard>;
 };
-export default function PostList({ list, showMenu }: Props) {
+export default function PostList({ list, Item }: Props) {
   const renderItem = ({ item }: { item: BlogPostCard }) => (
-    <PostCard className="bg-background m-1" {...item} />
+    <>
+      {Item ? (
+        <Item {...item} />
+      ) : (
+        <PostCard className="bg-background m-1" {...item} />
+      )}
+    </>
   );
+
   return <HoverEffect items={list} ListItem={renderItem} />;
 }
 

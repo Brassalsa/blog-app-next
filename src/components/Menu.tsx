@@ -142,7 +142,9 @@ export function MenuLinks({
                   )}
                 >
                   <>
-                    <AuthorUI author={data!.user!} withText={false} />
+                    <AuthorUI author={data!.user!}>
+                      <AuthorUI.Image />
+                    </AuthorUI>
                     <span className="sr-only">Account Page</span>
                   </>
                 </TooltipComponent>

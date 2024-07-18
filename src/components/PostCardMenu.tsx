@@ -38,8 +38,11 @@ export default function PostCardMenu({ id, author }: PostCardProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="absolute top-0 right-0">
-          <Ellipsis />
+        <Button
+          variant="ghost"
+          className="absolute top-0 right-0 px-2 py-1 size-fit m-1"
+        >
+          <Ellipsis size={20} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -52,7 +55,7 @@ export default function PostCardMenu({ id, author }: PostCardProps) {
         {isAuthor && (
           <>
             <DropdownMenuItem asChild>
-              <MenuItemLink href={links.editBlog}>Edit</MenuItemLink>
+              <MenuItemLink href={links.editBlog(id)}>Edit</MenuItemLink>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={deleteBlogPost}
@@ -75,7 +78,7 @@ type MenuItemProps = {
 const MenuItemLink = ({ href, children }: MenuItemProps) => {
   return (
     <Link
-      className="w-full flex justify-center items-center px-1 py-2 rounded-md hover:bg-secondary transition duration-200 text-sm"
+      className="w-full flex justify-center items-center px-1 py-2 rounded-sm hover:bg-secondary transition duration-200 text-sm"
       href={href}
     >
       {children}
