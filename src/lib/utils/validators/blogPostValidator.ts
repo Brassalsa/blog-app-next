@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { AppError } from "../formatter";
-import { ALL_CATEGORIES } from "@/lib/constants";
+import { ALL_CATEGORIES, CDNHost } from "@/lib/constants";
 import { validateImageFile } from "./image";
 
 const blogSchema = z.object({
@@ -20,9 +19,12 @@ const blogSchema = z.object({
     })
     .max(200, { message: "About section is too long, max 200 charactors" }),
   image: z.any().refine(
-    (file: File | string) => {
+    (file?: File | string) => {
+      if (!file) {
+        return true;
+      }
       if (typeof file === "string") {
-        return file.includes("fakepath");
+        return file.includes("fakepath") || file.includes(CDNHost);
       }
       return validateImageFile(file);
     },
