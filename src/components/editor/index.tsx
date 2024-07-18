@@ -24,7 +24,6 @@ function Editor({ description, onChange }: Props) {
     onUpdate({ editor }) {
       debounce(() => {
         onChange(editor.getHTML());
-        console.log(editor.getHTML());
       });
     },
   });
