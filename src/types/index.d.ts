@@ -1,4 +1,11 @@
 import { Session } from "next-auth";
+import { PropsWithChildren } from "react";
+
+type PropsWithClassName = {
+  className?: string;
+};
+
+type PropsDefault = PropsWithChildren & PropsWithClassName;
 
 type AppResponseType<T> = {
   data: T;
@@ -7,13 +14,16 @@ type AppResponseType<T> = {
   type: "ok" | "err";
 };
 
-type BlogPostType = {
-  id: string;
+type BlogEditorType = {
   title: string;
   category: string;
   about: string;
   image: string;
   description: string;
+};
+
+type BlogPostType = BlogEditorType & {
+  id: string;
   authorId: string;
   createdAt: Date | string;
   updatedAt: Date | string;
