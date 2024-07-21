@@ -20,12 +20,14 @@ async function BlogList({ searchParams }: Props) {
   }
 
   return (
-    <BlogListPage
-      title="Blog Posts"
-      posts={res.data}
-      disableNext={res.data.length === 0 || res.data.length < postPerPage}
-      disablePrev={currentPage <= 1}
-    />
+    <>
+      <BlogListPage
+        title="Blog Posts"
+        posts={res.data}
+        disableNext={res.data.length === 0 || res.data.length < postPerPage}
+        disablePrev={currentPage <= 1}
+      />
+    </>
   );
 }
 
