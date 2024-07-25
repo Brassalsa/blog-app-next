@@ -1,5 +1,5 @@
-import { Session } from "next-auth";
-import { PropsWithChildren } from "react";
+import type { Session } from "next-auth";
+import type { PropsWithChildren } from "react";
 
 type PropsWithClassName = {
   className?: string;

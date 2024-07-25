@@ -7,6 +7,7 @@ import {
 import PostList, { PostListLoading } from "@/components/PostList";
 import AllCategories from "@/components/Categories";
 import StreamComp from "@/components/ui/stream-comp";
+import ErrorCard from "@/components/ui/error-card";
 
 export default async function Home() {
   return (
@@ -17,7 +18,15 @@ export default async function Home() {
           fallback={<PostListLoading />}
           AsyncComp={async () => {
             const res = await getLatestPost();
-            return <LatestPost data={res.data} err={res.err} />;
+            if (!res.data) {
+              return (
+                <ErrorCard
+                  title={"Error while fetching latest post..."}
+                  description={res.err}
+                />
+              );
+            }
+            return <LatestPost data={res.data} />;
           }}
         />
         <AllCategories />
@@ -28,7 +37,15 @@ export default async function Home() {
           fallback={<PostListLoading />}
           AsyncComp={async () => {
             const res = await getPostList();
-            return <PostList list={res.data || []} />;
+            if (!res.data) {
+              return (
+                <ErrorCard
+                  title={"Error fetching blog posts..."}
+                  description={res.err}
+                />
+              );
+            }
+            return <PostList list={res.data} />;
           }}
         />
       </div>

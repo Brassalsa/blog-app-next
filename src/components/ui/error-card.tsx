@@ -1,39 +1,58 @@
-import { cn } from "@/lib/utils";
-import React from "react";
-import { Card, CardContent, CardDescription, CardTitle } from "./card";
+"use client";
 
-type Props = {
-  title?: string | null;
-  description?: string | null;
-  className?: string;
-  children?: React.ReactNode;
+import { cn } from "@/lib/utils";
+import React, { createContext, useContext } from "react";
+import { Card, CardContent, CardDescription, CardTitle } from "./card";
+import { PropsDefault } from "@/types";
+
+type ErrorCtxType = {
+  title?: React.ReactNode;
+  description?: React.ReactNode;
 };
+
+const ErrorCardCtx = createContext<ErrorCtxType | null>(null);
+const useErrorCtx = () => {
+  const ctx = useContext(ErrorCardCtx);
+  if (!ctx) {
+    throw new Error("useErrorCtx must be used inside ErrorCard", {
+      cause: "component used outside ErrorCard",
+    });
+  }
+  return ctx;
+};
+
+type Props = ErrorCtxType & PropsDefault;
+
 function ErrorCard({ title, description, className, children }: Props) {
   return (
-    <Card className={cn("size-max border", className)}>
-      <CardContent className="px-6 py-4">
-        {children || (
-          <>
-            <ErrorCard.Title children={title} />
-            <ErrorCard.Description children={description} />
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <ErrorCardCtx.Provider value={{ title, description }}>
+      <Card className={cn("size-max", className)}>
+        <CardContent className="px-6 py-4">
+          {children || (
+            <>
+              <ErrorCard.Title />
+              <ErrorCard.Description />
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </ErrorCardCtx.Provider>
   );
 }
 
-ErrorCard.Title = ({ children }: { children?: React.ReactNode }) => {
+ErrorCard.Title = ({ children, className }: PropsDefault) => {
+  const { title } = useErrorCtx();
   return (
-    <CardTitle className="text-center text-red-400">
-      {children || "Error"}
+    <CardTitle className={cn("text-center text-red-400", className)}>
+      {children || title || "Error"}
     </CardTitle>
   );
 };
-ErrorCard.Description = ({ children }: { children?: React.ReactNode }) => {
+ErrorCard.Description = ({ children, className }: PropsDefault) => {
+  const { description } = useErrorCtx();
   return (
-    <CardDescription className="text-red-400 text-center">
-      {children || "Something went wrong"}
+    <CardDescription className={cn("text-red-400 text-center", className)}>
+      {children || description || "Something went wrong"}
     </CardDescription>
   );
 };
