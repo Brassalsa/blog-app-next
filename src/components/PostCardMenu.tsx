@@ -6,15 +6,20 @@ import {
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { PostCardProps } from "./PostCard";
 import { links } from "@/lib/routes";
 import Link from "next/link";
 import React from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { deletePost } from "@/lib/services/server/blog.controller";
+import { AuthorType, PropsWithClassName } from "@/types";
+import { cn } from "@/lib/utils";
 
-export default function PostCardMenu({ id, author }: PostCardProps) {
+type PostMenuProps = PropsWithClassName & {
+  id: string;
+  author: AuthorType;
+};
+export default function PostCardMenu({ id, author, className }: PostMenuProps) {
   const { data } = useSession();
   const { toast } = useToast();
   const isAuthor = data?.user?.email === author.email;
@@ -38,10 +43,7 @@ export default function PostCardMenu({ id, author }: PostCardProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="absolute top-0 right-0 px-2 py-1 size-fit m-1"
-        >
+        <Button variant="ghost" className={cn("size-fit m-1 z-40", className)}>
           <Ellipsis size={20} />
         </Button>
       </DropdownMenuTrigger>
