@@ -1,9 +1,9 @@
 "use client";
 import { AuthorType } from "@/types";
-import Image from "next/image";
 import { Separator } from "../ui/separator";
 import SignOut from "../SignOut";
 import { useSession } from "next-auth/react";
+import AuthorUI, { AuthorUILoading } from "../AuthorUI";
 
 type Props = {
   user: AuthorType;
@@ -11,28 +11,36 @@ type Props = {
 };
 
 function AccountLayout({ user, children }: Props) {
-  const { data } = useSession();
+  const { data, status } = useSession();
   const isMyAccount = data?.user?.email === user.email;
+  const isLoading = status === "loading";
   return (
     <div className="space-y-4 ">
       <div className="flex gap-2 justify-center items-center">
         <h1 className="mr-auto heading">Account</h1>
         {isMyAccount && <SignOut />}
       </div>
-      <div className="flex gap-4 items-center h-40">
-        <div className="relative flex-shrink-0 size-32 sm:size-40 rounded-full overflow-hidden">
-          <Image src={user.image || ""} alt="user-img" sizes="400px" fill />
-        </div>
-        <Separator orientation="vertical" />
-        <div className="overflow-hidden">
-          <div className="from-left">
-            <h2 className="text-xl sm:text-2xl">{user.name}</h2>
-            <h3 className="text-sm sm:text-lg text-muted-foreground">
-              {user.email}
-            </h3>
-          </div>
-        </div>
-      </div>
+      {isLoading ? (
+        <AuthorUILoading className="h-40">
+          <AuthorUILoading.Image className="h-40" />
+          <Separator orientation="vertical" />
+          <AuthorUILoading.Skeltons className="h-6 w-40" />
+        </AuthorUILoading>
+      ) : (
+        <AuthorUI author={data!.user!} className="h-40 ">
+          <AuthorUI.Image
+            className="size-32 sm:size-40"
+            height={400}
+            width={400}
+          />
+          <Separator orientation="vertical" />
+
+          <AuthorUI.RightUI>
+            <AuthorUI.Name className="text-xl sm:text-2xl" />
+            <AuthorUI.Email className="text-sm sm:text-lg text-muted-foreground" />
+          </AuthorUI.RightUI>
+        </AuthorUI>
+      )}
       <Separator />
       {children}
     </div>

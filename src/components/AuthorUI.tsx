@@ -2,12 +2,14 @@
 
 import { UserCircle } from "lucide-react";
 import Image from "next/image";
-import React, { useContext, createContext } from "react";
+import React, { useContext, createContext, HTMLProps } from "react";
 
 import { cn } from "@/lib/utils";
 import { AuthorType, PropsDefault, PropsWithClassName } from "@/types";
 import Link from "next/link";
 import { links } from "@/lib/routes";
+import { Skeleton } from "./ui/skeleton";
+import MultiplyNode from "./ui/multiply-node";
 
 type Props = PropsDefault & {
   author: AuthorType;
@@ -49,7 +51,6 @@ const DefaultAuthorUI = () => {
   return (
     <>
       <AuthorUI.Image />
-
       <AuthorUI.RightUI>
         <AuthorUI.Name />
         <AuthorUI.Email />
@@ -58,21 +59,27 @@ const DefaultAuthorUI = () => {
   );
 };
 
-AuthorUI.Image = ({ className }: PropsWithClassName) => {
+AuthorUI.Image = ({
+  className,
+  ...props
+}: PropsWithClassName & HTMLProps<"img">) => {
   const { author } = useAuthorContext();
-  return author.image ? (
+  return author?.image ? (
     <Image
       src={author.image}
       alt="author-image"
+      //@ts-expect-error
       width={80}
+      //@ts-expect-error
       height={80}
+      {...props}
       className={cn(
         "object-cover aspect-square size-12 rounded-[1000px]",
         className
       )}
     />
   ) : (
-    <UserCircle className="size-10" />
+    <UserCircle className={cn("size-10", className)} />
   );
 };
 
@@ -114,3 +121,31 @@ AuthorUI.Email = ({ className }: PropsWithClassName) => {
 };
 
 export default AuthorUI;
+
+export const AuthorUILoading = ({ children, className }: PropsDefault) => (
+  <div className={cn("flex size-40 gap-2", className)}>
+    {children || (
+      <>
+        <AuthorUILoading.Image />
+        <AuthorUILoading.Skeltons />
+      </>
+    )}
+  </div>
+);
+
+AuthorUILoading.Image = ({ className }: PropsWithClassName) => (
+  <Skeleton className={cn("aspect-square h-12 rounded-full", className)} />
+);
+
+AuthorUILoading.Skeltons = ({
+  className,
+}: PropsWithClassName & {
+  childClassName?: string;
+}) => (
+  <div className={cn("flex flex-col gap-2 justify-center items-center")}>
+    <MultiplyNode
+      times={2}
+      node={<Skeleton className={cn("h-3 w-12", className)} />}
+    />
+  </div>
+);
