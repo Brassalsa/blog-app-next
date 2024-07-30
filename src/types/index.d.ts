@@ -1,6 +1,8 @@
 import type { Session } from "next-auth";
 import type { PropsWithChildren } from "react";
 
+type Cb = () => void;
+
 type PropsWithClassName = {
   className?: string;
 };
