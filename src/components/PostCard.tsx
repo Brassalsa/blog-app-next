@@ -38,7 +38,7 @@ export default function PostCard(props: PostCardProps) {
     <PostCardContext.Provider value={props}>
       <Card
         className={cn(
-          "w-[85svw] md:w-80 lg:w-[420px] bg-transparent relative sm:grid grid-cols-2 md:grid-cols-1 items-center justify-center rounded-md  shadow-muted-foreground/30 border ",
+          "w-[85svw] md:w-80 lg:w-[420px] bg-transparent relative sm:grid grid-cols-2 md:grid-cols-1 items-center justify-center rounded-md  shadow-muted-foreground/30 border group",
           className
         )}
       >
@@ -66,10 +66,10 @@ const DefaultPost = () => {
   const { author } = usePostCardContext();
   return (
     <>
-      <PostCard.Menu />
+      <PostCard.Menu className="group-hover:border border-none" />
       <PostCard.Image />
       <PostCard.LinkComp>
-        <PostCard.ContentUI>
+        <PostCard.ContentUI className="group-hover:translate-x-2 transition-transform duration-300 py-4 sm:py-0">
           <PostCard.Category />
           <PostCard.Title />
           <PostCard.About />
@@ -91,7 +91,7 @@ PostCard.Image = function () {
   return (
     <PostCard.LinkComp>
       <CardHeader className="p-0 md:pb-4 overflow-hidden">
-        <div className="relative h-72 w-full lg:h-80 min-w-52 hidden sm:block mx-auto right-0">
+        <div className="relative h-72 w-full lg:h-80 min-w-52 hidden sm:block mx-auto right-0 ">
           <Image
             src={image}
             className="object-cover"
@@ -110,17 +110,22 @@ PostCard.Title = function () {
   return <CardTitle className="truncate text-xl">{title}</CardTitle>;
 };
 
-PostCard.ContentUI = ({ children }: PropsWithChildren) => (
-  <CardContent className="truncate flex flex-col gap-2">{children}</CardContent>
+PostCard.ContentUI = ({ children, className }: PropsDefault) => (
+  <CardContent className={cn("truncate flex flex-col gap-2", className)}>
+    {children}
+  </CardContent>
 );
 
-PostCard.Menu = () => {
+PostCard.Menu = ({ className }: PropsWithClassName) => {
   const { id, author } = usePostCardContext();
   return (
     <PostCardMenu
       id={id}
       author={author}
-      className="scale-75 absolute top-0 right-0 m-0  text-white border-primary border-2 shadow-black"
+      className={cn(
+        "scale-75 absolute top-0 right-0 m-0  text-white border-primary border-2 shadow-black",
+        className
+      )}
     />
   );
 };

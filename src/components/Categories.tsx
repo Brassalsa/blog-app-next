@@ -6,14 +6,13 @@ import React from "react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import Link from "next/link";
 import { links } from "@/lib/routes";
-import { BackgroundGradient } from "./ui/background-gradient";
 import { HoverBorderGradient } from "./ui/hover-border-gradient";
 
 // all cat list
 export default function AllCategories() {
   return (
     <Card className=" hidden md:block max-w-xl pl-6 w-full">
-      <CardHeader className="heading p-0 mb-5">All Categories</CardHeader>
+      <CardHeader className="heading p-0 mb-5">Categories</CardHeader>
       <CardContent className="flex flex-wrap justify-between items-center gap-y-10">
         {Object.keys(ALL_CATEGORIES).map((i) => (
           <Link href={links.blogCat(i)} key={i}>
