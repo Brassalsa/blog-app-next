@@ -17,7 +17,7 @@ async function Layout({ children, params }: Props) {
     notFound();
   }
 
-  return <AccountLayout user={res.data} children={children} />;
+  return <AccountLayout account={res.data} children={children} />;
 }
 
 export default Layout;

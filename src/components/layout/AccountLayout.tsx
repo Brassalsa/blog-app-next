@@ -4,21 +4,34 @@ import { Separator } from "../ui/separator";
 import SignOut from "../SignOut";
 import { useSession } from "next-auth/react";
 import AuthorUI, { AuthorUILoading } from "../AuthorUI";
+import { SettingsIcon } from "lucide-react";
+import { links } from "@/lib/routes";
+import { PropsWithChildren } from "react";
+import ButtonLink from "../ui/buttonLink";
 
-type Props = {
-  user: AuthorType;
-  children?: React.ReactNode;
+type Props = PropsWithChildren & {
+  account: AuthorType;
 };
 
-function AccountLayout({ user, children }: Props) {
+function AccountLayout({ account, children }: Props) {
   const { data, status } = useSession();
-  const isMyAccount = data?.user?.email === user.email;
+  const isMyAccount = data?.user?.email === account.email;
   const isLoading = status === "loading";
   return (
     <div className="space-y-4 ">
       <div className="flex gap-2 justify-center items-center">
         <h1 className="mr-auto heading">Account</h1>
-        {isMyAccount && <SignOut />}
+        {isMyAccount && (
+          <>
+            <ButtonLink className="group" href={links.accountSettings}>
+              <SettingsIcon
+                className="p-1 rounded-full scale-150 group-hover:-rotate-90 
+              group-hover:translate-x-[-2px]  hover:bg-muted transition-transform duration-300"
+              />
+            </ButtonLink>
+            <SignOut />
+          </>
+        )}
       </div>
       {isLoading ? (
         <AuthorUILoading className="h-40">
@@ -27,7 +40,7 @@ function AccountLayout({ user, children }: Props) {
           <AuthorUILoading.Skeltons className="h-6 w-40" />
         </AuthorUILoading>
       ) : (
-        <AuthorUI author={data!.user!} className="h-40 ">
+        <AuthorUI author={account} className="h-40 ">
           <AuthorUI.Image
             className="size-32 sm:size-40"
             height={400}
