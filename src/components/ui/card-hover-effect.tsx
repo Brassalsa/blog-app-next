@@ -74,7 +74,7 @@ export const HoverComponent = ({
         <AnimatePresence>
           {isActive && (
             <motion.span
-              className="absolute inset-0 bg-muted-foreground/35 block rounded-md"
+              className="absolute inset-0 bg-muted-foreground/35 block rounded-md -z-10"
               layoutId="hover-bg"
               initial={{ opacity: 0 }}
               animate={{
