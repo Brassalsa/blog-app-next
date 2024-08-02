@@ -28,6 +28,7 @@ function AccountLayout({ account, children }: Props) {
                 className="p-1 rounded-full scale-150 group-hover:-rotate-90 
               group-hover:translate-x-[-2px]  hover:bg-muted transition-transform duration-300"
               />
+              <span className="sr-only">Settings</span>
             </ButtonLink>
             <SignOut />
           </>
