@@ -17,7 +17,7 @@ import { links } from "@/lib/routes";
 import AuthorUI from "./AuthorUI";
 import { BlogPostCard, PropsDefault, PropsWithClassName } from "@/types";
 import { Skeleton } from "./ui/skeleton";
-import PostCardMenu from "./PostCardMenu";
+import PostMenu from "./PostMenu";
 import MultiplyNode from "./ui/multiply-node";
 
 const PostCardContext = createContext<BlogPostCard | null>(null);
@@ -119,7 +119,7 @@ PostCard.ContentUI = ({ children, className }: PropsDefault) => (
 PostCard.Menu = ({ className }: PropsWithClassName) => {
   const { id, author } = usePostCardContext();
   return (
-    <PostCardMenu
+    <PostMenu
       id={id}
       author={author}
       className={cn(
