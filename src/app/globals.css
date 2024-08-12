@@ -89,6 +89,10 @@
     @apply aspect-auto min-h-52 min-w-52 w-[80%] object-contain mx-auto max-w-3xl my-3 rounded-lg;
   }
 
+  .desc-img.img-loading {
+    @apply blur-sm hover:cursor-wait;
+  }
+
   .from-left {
     animation: enter-from-left 1s ease-in-out;
   }
