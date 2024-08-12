@@ -4,25 +4,22 @@ import asyncHandler from "@/lib/utils/asyncHandler";
 import { AppError } from "@/lib/utils/formatter";
 import db from "../db";
 import { getSessionOrThrow } from "@/lib/utils/authUtils";
-import { uploadImage } from "./utils";
+import { deleteImageById } from "./utils";
 import { POST_PER_PAGE } from "@/lib/constants";
 import { revalidatePath } from "next/cache";
-import { verifyBlogPostForm } from "./helpers";
+import { blogSchemaServer } from "@/lib/utils/validators/blogPostValidator";
+import { BlogEditorType } from "@/types";
+import { redirect } from "next/navigation";
 
 // add a post
-export const addBlogPost = asyncHandler(async (formData: FormData) => {
+export const addBlogPost = asyncHandler(async (data: BlogEditorType) => {
   const { user } = await getSessionOrThrow();
-  const safeData = verifyBlogPostForm(formData);
-
-  const imageUrl = await uploadImage(formData, "image");
-  if (!imageUrl.data) {
-    throw AppError(imageUrl.err!, imageUrl.statusCode);
-  }
+  console.log(data);
+  const safeData = blogSchemaServer.parse(data);
 
   const res = await db.post.create({
     data: {
       ...safeData,
-      image: imageUrl.data,
       author: {
         connect: {
           email: user!.email!,
@@ -30,7 +27,7 @@ export const addBlogPost = asyncHandler(async (formData: FormData) => {
       },
     },
   });
-
+  revalidatePath("/");
   return res;
 });
 
@@ -208,6 +205,8 @@ export const deletePost = asyncHandler(async (postId: string) => {
     },
     select: {
       id: true,
+      imagePubId: true,
+      descImgsIds: true,
     },
   });
 
@@ -221,6 +220,11 @@ export const deletePost = asyncHandler(async (postId: string) => {
     },
   });
 
+  // after delete
+  postIdInDb.descImgsIds.map((i) => {
+    deleteImageById(i);
+  });
+  deleteImageById(postIdInDb.imagePubId);
   revalidatePath("/");
 
   return "deleted successfully";
@@ -228,10 +232,10 @@ export const deletePost = asyncHandler(async (postId: string) => {
 
 // edit post
 export const editPost = asyncHandler(
-  async (postId: string, formData: FormData) => {
-    const safeData = verifyBlogPostForm(formData);
+  async (postId: string, data: BlogEditorType) => {
+    const safeData = blogSchemaServer.parse(data);
     const { user } = await getSessionOrThrow();
-    const postIdInDb = await db.post.findUnique({
+    const oldPost = await db.post.findUnique({
       where: {
         id: postId,
         author: {
@@ -240,33 +244,43 @@ export const editPost = asyncHandler(
       },
       select: {
         id: true,
+        imagePubId: true,
+        descImgsIds: true,
       },
     });
 
-    if (!postIdInDb) {
+    if (!oldPost) {
       throw AppError("post not found", 404);
     }
 
-    const img = formData.get("image") as File | string;
-    let imgUrl = "";
-    if (img instanceof File) {
-      let res = await uploadImage(formData, "image");
-      if (!res.data) {
-        throw AppError(res.err!, res.statusCode);
-      }
-      imgUrl = res.data;
-    } else {
-      imgUrl = img;
-    }
+    const newDescImgIds = safeData.descImgsIds;
+
+    // update
     await db.post.update({
       where: {
-        id: postIdInDb.id,
+        id: oldPost.id,
+        author: {
+          email: user.email,
+        },
       },
       data: {
         ...safeData,
-        image: imgUrl,
       },
     });
+
+    // after update
+    const oldDescImgIds = oldPost.descImgsIds;
+    // delete old post images
+    if (oldPost.imagePubId !== safeData.imagePubId) {
+      deleteImageById(oldPost.imagePubId);
+    }
+    const toBeDeleted = oldDescImgIds.filter((i) => !newDescImgIds.includes(i));
+
+    toBeDeleted.map((i) => {
+      deleteImageById(i);
+    });
+
+    // revalidate path
     revalidatePath("/");
     return "updated successfully";
   }

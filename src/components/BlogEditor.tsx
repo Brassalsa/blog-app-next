@@ -1,10 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, {
+  ComponentPropsWithoutRef,
+  forwardRef,
+  Ref,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import blogSchema from "@/lib/utils/validators/blogPostValidator";
+import blogSchemaClient from "@/lib/utils/validators/blogPostValidator";
 import {
   Form,
   FormControl,
@@ -15,7 +21,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import Editor from "./editor";
+import Editor, { EditorRef } from "./editor";
 import { useToast } from "@/hooks/use-toast";
 import { ALL_CATEGORIES } from "@/lib/constants";
 import {
@@ -32,84 +38,114 @@ import Image from "next/image";
 import { useImagePreview } from "@/hooks/image-preview";
 import { validateImageFile } from "@/lib/utils/validators/image";
 import { FileConfig } from "@/lib/config/files";
+import { deleteImageById, uploadImage } from "@/lib/services/server/utils";
+import usePreventNavigation from "@/hooks/use-prevent-navigation";
 
 type Props = {
-  submitAction: (formData: FormData) => Promise<AppResponseType<any>>;
+  submitAction: (data: BlogEditorType) => Promise<AppResponseType<any>>;
   defaultValues: BlogEditorType;
   afterSubmit?: () => void;
 };
 
 function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
   const { toast } = useToast();
-  const [image, setImage] = useState<File>();
-
-  const form = useForm<z.infer<typeof blogSchema>>({
-    resolver: zodResolver(blogSchema),
+  const editorRef = useRef<EditorRef | null>(null);
+  usePreventNavigation();
+  const imgPreviewRef = useRef<IRef | null>(null);
+  const form = useForm<z.infer<typeof blogSchemaClient>>({
+    resolver: zodResolver(blogSchemaClient),
     mode: "onChange",
-    defaultValues: { ...defaultValues, image: "" },
+    defaultValues: {
+      ...defaultValues,
+      image: "",
+      descImgsIds: defaultValues.descImgsIds,
+    },
   });
+  const { isSubmitting } = form.formState;
+  const saveToLocal = () => {
+    console.log("i am saved");
+  };
+  const onSubmit = async (v: z.infer<typeof blogSchemaClient>) => {
+    const image = imgPreviewRef.current!.imgPreview.img;
+    let imgUrl = defaultValues.image;
+    let imgPubId = defaultValues.imagePubId;
 
-  const onSubmit = async (v: z.infer<typeof blogSchema>) => {
-    const formData = new FormData();
-
-    const keys = Object.keys(v);
-
-    for (let i of keys) {
-      if (i !== "image") {
-        formData.append(i, v[i as keyof typeof v]);
-        continue;
-      }
-
-      // if image and defaultValues.image are null
-      if (!image && !defaultValues.image) {
-        form.setError(
-          "image",
-          { message: "Invalid image file", type: "required" },
-          { shouldFocus: true }
-        );
-        return;
-      }
-
-      // validate image if exists
-      if (image && image instanceof File) {
-        if (!validateImageFile(image)) {
-          form.setError(
-            "image",
-            {
-              message: `Invalid image file or file size is greater then ${FileConfig.maxSize}MB`,
-              type: "maxLength",
-            },
-            { shouldFocus: true }
-          );
-
-          return;
-        }
-        formData.append("image", image);
-      }
-
-      // if image is null
-      if (!image) {
-        formData.append("image", defaultValues.image);
-      }
+    if (!image && !defaultValues.image) {
+      form.setError(
+        "image",
+        { message: "Invalid image file", type: "required" },
+        { shouldFocus: true }
+      );
+      return;
     }
-
     toast({
       title: "Submit Post",
       description: "Post submittion in progress...",
     });
 
-    const res = await submitAction(formData);
+    // validate image if exists
+    if (image && image instanceof File) {
+      if (!validateImageFile(image)) {
+        form.setError(
+          "image",
+          {
+            message: `Invalid image file or file size is greater then ${FileConfig.maxSize}MB`,
+            type: "maxLength",
+          },
+          { shouldFocus: true }
+        );
+
+        return;
+      }
+      // upload image
+      const fd = new FormData();
+      fd.append("image", image);
+      const imgRes = await uploadImage(fd, "image");
+      if (imgRes.err) {
+        toast({
+          title: "Submit Post",
+          description: "Something went wrong while uploading thumbnail image",
+          className: "text-red-400",
+        });
+        console.log(imgRes.err);
+        return;
+      }
+      // set img url and add to pubId
+      const { url, pubId } = imgRes.data!;
+      imgUrl = url;
+      imgPubId = pubId;
+    }
+    // add desc imgs ids
+    const descImgsIds: string[] = [];
+    editorRef.current!.traverser((node) => {
+      if (node.type.name === "image" && node.attrs["pubId"]) {
+        descImgsIds.push(node.attrs["pubId"]);
+      }
+    })();
+
+    const res = await submitAction({
+      ...v,
+      descImgsIds,
+      image: imgUrl,
+      imagePubId: imgPubId,
+    });
     if (res.err) {
       toast({
         title: "Submit Post",
         description: res.err,
         className: "text-red-400",
       });
+      return;
     } else {
       toast({
         title: "Submit Post",
         description: "Post submitted successfully",
       });
+      // delete all the pubImgIds that are uploaded but deleted by user
+      const idsToBeDeleted = editorRef.current?.imgPubIds.filter(
+        (i) => !descImgsIds.includes(i)
+      );
+      idsToBeDeleted?.map((id) => deleteImageById(id));
 
       if (afterSubmit) {
         afterSubmit();
@@ -203,7 +239,7 @@ function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
                     onChange={(e) => {
                       field.onChange(e);
                       const file = e.target.files?.[0];
-                      setImage(file);
+                      imgPreviewRef.current?.imgPreview.setImg(file);
                     }}
                   />
                 </FormControl>
@@ -211,7 +247,10 @@ function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
               </FormItem>
             )}
           />
-          <ImagePreview image={image || defaultValues.image} />
+          <ImagePreview
+            image={imgPreviewRef.current?.imgPreview.img || defaultValues.image}
+            ref={imgPreviewRef}
+          />
           <FormField
             control={form.control}
             name="description"
@@ -219,13 +258,29 @@ function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Editor description={field.value} onChange={field.onChange} />
+                  <Editor
+                    description={field.value}
+                    onChange={field.onChange}
+                    ref={editorRef}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button>Submit</Button>
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              disabled={isSubmitting}
+              type="button"
+              onClick={saveToLocal}
+              variant="outline"
+            >
+              Save to Local
+            </Button>
+            <Button disabled={isSubmitting} className="w-20">
+              {isSubmitting ? "Submiting..." : "Submit"}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
@@ -235,36 +290,42 @@ function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
 type IProps = {
   image?: File | string | undefined;
 };
-const ImagePreview = ({ image }: IProps) => {
-  const imgData = useImagePreview(image);
+type IRef = {
+  imgPreview: ReturnType<typeof useImagePreview>;
+};
+const ImagePreview = forwardRef(({ image }: IProps, ref: Ref<IRef>) => {
+  const data = useImagePreview(image);
+  const { isLoading, url } = data;
+  useImperativeHandle(ref, () => ({ imgPreview: data }));
+  const ImageComp = (
+    props: ComponentPropsWithoutRef<"img"> & { src: string }
+  ) => (
+    //@ts-expect-error
+    <Image
+      {...props}
+      sizes="700px"
+      fill
+      alt="preview-image"
+      className="object-contain transition hover:scale-105"
+    />
+  );
   return (
     <div
       className={
         "relative  aspect-video w-80 rounded-sm mx-auto border flex justify-center items-center overflow-hidden"
       }
     >
-      {!image && <>No Preview</>}
-      {image && typeof image == "string" && (
-        <Image
-          src={image}
-          sizes="700px"
-          fill
-          alt="preview-image"
-          className="object-contain transition hover:scale-105"
-        />
-      )}
-
-      {image && typeof image === "object" && (
-        <Image
-          src={imgData}
-          sizes="700px"
-          fill
-          alt="preview-image"
-          className="object-contain transition hover:scale-105"
-        />
+      {isLoading ? (
+        <>Loading....</>
+      ) : !image ? (
+        <>No Preview</>
+      ) : typeof image == "string" ? (
+        <ImageComp src={url!} />
+      ) : (
+        <ImageComp src={url!} />
       )}
     </div>
   );
-};
+});
 
 export default BlogEditor;

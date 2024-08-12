@@ -2,7 +2,7 @@ import { z } from "zod";
 import { ALL_CATEGORIES, CDNHost } from "@/lib/constants";
 import { validateImageFile } from "./image";
 
-const blogSchema = z.object({
+const common = {
   title: z
     .string()
     .min(5, {
@@ -12,12 +12,18 @@ const blogSchema = z.object({
   category: z.string().refine(categoryValidator, {
     message: "Invalid category",
   }),
+  imagePubId: z.string(),
   about: z
     .string()
     .min(5, {
       message: "About section is too short",
     })
     .max(200, { message: "About section is too long, max 200 charactors" }),
+  description: z.string(),
+  descImgsIds: z.array(z.string()),
+};
+const blogSchemaClient = z.object({
+  ...common,
   image: z.any().refine(
     (file?: File | string) => {
       if (!file) {
@@ -32,7 +38,14 @@ const blogSchema = z.object({
       message: "Invalid Image file",
     }
   ),
-  description: z.string(),
+});
+
+export const blogSchemaServer = z.object({
+  ...common,
+  image: z
+    .string()
+    .min(10)
+    .refine((val) => val.includes(CDNHost), "invalid image url"),
 });
 
 // category validation
@@ -41,4 +54,4 @@ function categoryValidator(cat: string) {
   return allCategories.includes(cat);
 }
 
-export default blogSchema;
+export default blogSchemaClient;

@@ -4,6 +4,7 @@ import {
   UploadApiErrorResponse,
   UploadApiOptions,
   UploadApiResponse,
+  DeleteApiResponse,
 } from "cloudinary";
 import cdn from ".";
 
@@ -29,3 +30,18 @@ export default async function uploadFile(
 
   return res;
 }
+
+export const deleteFile = async (
+  pubId: string,
+  tag: string
+): Promise<DeleteApiResponse> => {
+  const resource: UploadApiResponse | undefined = await cdn.api.resource(pubId);
+
+  if (!resource?.tags.includes(tag)) {
+    throw new Error("file don't have tag");
+  }
+  return await cdn.uploader.destroy(pubId);
+};
+
+export const deleteFilesByTag = async (tag: string) =>
+  await cdn.api.delete_resources_by_tag(tag);
