@@ -1,10 +1,15 @@
 import Image from "next/image";
-
 import { CategList } from "../Categories";
 import { formatDate } from "@/lib/utils/helpers";
 import AuthorUI from "../AuthorUI";
 import Comments from "../comments";
 import { BlogPostType } from "@/types";
+import PostMenu, {
+  ActionDelete,
+  ActionEdit,
+  ShowWhenIsOwner,
+  ViewAuthor,
+} from "../PostMenu";
 
 function BlogPostPage({
   id,
@@ -19,6 +24,21 @@ function BlogPostPage({
 }: BlogPostType) {
   return (
     <div key={id} className="flex flex-col">
+      <PostMenu
+        author={author}
+        id={id}
+        className="scale-75 ml-auto"
+        menuItems={
+          <>
+            <ViewAuthor />
+            <ShowWhenIsOwner>
+              <ActionEdit />
+              <ActionDelete />
+            </ShowWhenIsOwner>
+          </>
+        }
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
         <div className="relative  min-h-52 max-w-full aspect-video mx-auto group overflow-hidden rounded-lg">
           <Image

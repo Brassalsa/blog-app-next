@@ -90,7 +90,6 @@ export const ActionEdit = () => {
 export const ActionDelete = () => {
   const { toast } = useToast();
   const { id } = usePostMenuCtx();
-
   const deleteBlogPost = async () => {
     const res = await deletePost(id);
     if (res.err) {
