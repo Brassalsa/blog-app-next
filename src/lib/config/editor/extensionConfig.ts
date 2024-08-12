@@ -1,4 +1,4 @@
-import { ImageOptions } from "@tiptap/extension-image";
+import Image, { ImageOptions } from "@tiptap/extension-image";
 import { LinkOptions } from "@tiptap/extension-link";
 import { TextAlignOptions } from "@tiptap/extension-text-align";
 import { StarterKitOptions } from "@tiptap/starter-kit";
@@ -45,3 +45,35 @@ export const imageConfig: Partial<ImageOptions> = {
     class: "desc-img",
   },
 };
+
+// custom image extension
+export const CustomImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      class: {
+        default: null,
+        parseHTML: (el) => el.getAttribute("class"),
+        renderHTML: (attr) => {
+          if (!attr.class) return {};
+          return {
+            class: attr.class + " desc-img",
+          };
+        },
+      },
+      pubId: {
+        default: null,
+        parseHTML: (el) => el.getAttribute("data-pub-id"),
+        renderHTML: (attr) => {
+          const pubId = attr.pubId;
+          if (!pubId) {
+            return {};
+          }
+          return {
+            "data-pub-id": pubId,
+          };
+        },
+      },
+    };
+  },
+});

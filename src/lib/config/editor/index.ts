@@ -1,10 +1,10 @@
-import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import { Extensions } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
+  CustomImage,
   imageConfig,
   linkConfig,
   starterConfig,
@@ -16,5 +16,5 @@ export const editorExtensions: Extensions = [
   Underline.configure(),
   TextAlign.configure(textAlignConfig),
   Link.configure(linkConfig),
-  Image.configure(imageConfig),
+  CustomImage.configure(imageConfig),
 ];
