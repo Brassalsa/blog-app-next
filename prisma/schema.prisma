@@ -82,14 +82,16 @@ model Authenticator {
 }
 
 model Post {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  category     String
-  about        String
-  image        String
-  description  String
-  authorId     String   @db.ObjectId
-  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  title             String
+  category          String
+  about             String
+  image             String
+  imagePubId        String
+  description       String
+  descImgsIds       String[]   
+  authorId          String   @db.ObjectId
+  author            User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   comments     Comment[]
   createdAt    DateTime @default(now())
