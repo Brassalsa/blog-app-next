@@ -1,22 +1,33 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ToolBarToggle from "./ToolBarToggle";
-import { type Editor } from "@tiptap/react";
 import { Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { uploadImage } from "@/lib/services/server/utils";
+import { useEditorCtx } from ".";
+import { useImagePreview } from "@/hooks/image-preview";
 
-type Props = {
-  editor: Editor;
-};
-function ToolBarImage({ editor }: Props) {
+function ToolBarImage() {
   const { toast } = useToast();
-
+  const { editor, pushImgPubId } = useEditorCtx();
+  const [img, setImg] = useState<File | null>(null);
+  const { onLoadRef } = useImagePreview(img);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  onLoadRef.current = (url) =>
+    editor!
+      .chain()
+      .setImage({
+        src: url!,
+        alt: "uploading...",
+        //@ts-expect-error
+        class: "img-loading",
+      })
+      .run();
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    setImg(file);
     const formData = new FormData();
     formData.append("image", file);
 
@@ -32,6 +43,7 @@ function ToolBarImage({ editor }: Props) {
         description: res.err,
         className: "text-red-400",
       });
+      setImg(null);
       return;
     }
 
@@ -39,19 +51,25 @@ function ToolBarImage({ editor }: Props) {
       title: "File Upload",
       description: "File uploaded successfully!",
     });
-
-    editor
+    const { pubId, url } = res.data;
+    pushImgPubId(pubId);
+    editor!
       .chain()
+      .setNode("image")
       .setImage({
-        src: res.data,
+        src: url,
+        alt: `image-${pubId}`,
+        //@ts-expect-error
+        pubId,
       })
       .run();
+    inputRef.current!.value = "";
   };
 
   return (
     <div>
       <ToolBarToggle
-        pressed={editor.isActive("image")}
+        pressed={editor!.isActive("image")}
         onPressedChange={() => {
           inputRef.current?.click();
         }}
