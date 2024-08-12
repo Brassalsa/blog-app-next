@@ -1,17 +1,53 @@
 "use client";
-
-import { useEditor, EditorContent } from "@tiptap/react";
+import type { Node } from "@tiptap/pm/model";
+import { useEditor, EditorContent, Editor as EditorType } from "@tiptap/react";
 import { ToolBar } from "./ToolBar";
 import { editorExtensions } from "@/lib/config/editor";
 import useDebounce from "@/hooks/debounce";
 import EditorLoading from "./editorSkelton";
+import {
+  createContext,
+  Dispatch,
+  forwardRef,
+  Ref,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 
 type Props = {
   description: string;
   onChange: (richText: string) => void;
 };
 
-function Editor({ description, onChange }: Props) {
+export type EditorRef = {
+  editor: EditorType | null;
+  imgPubIds: string[];
+  traverser: (cb: (node: Node) => void) => () => void;
+};
+
+type EditorCtxType = EditorRef & {
+  setImgPubIds: Dispatch<string[]>;
+  pushImgPubId: Dispatch<string>;
+  popImgPubId: Dispatch<string>;
+};
+
+export const EditorCtx = createContext<EditorCtxType | null>(null);
+
+export const useEditorCtx = () => {
+  const ctx = useContext(EditorCtx);
+  if (!ctx) {
+    throw new Error("useEditorCtx must be used inside Editor");
+  }
+  return ctx;
+};
+
+function Editor(
+  { description, onChange }: Props,
+  editorRef: Ref<EditorRef | null>
+) {
+  const [imgPubIds, setImgPubIds] = useState<string[]>([]);
   const debounce = useDebounce();
   const editor = useEditor({
     extensions: editorExtensions,
@@ -27,18 +63,56 @@ function Editor({ description, onChange }: Props) {
       });
     },
   });
+
+  useImperativeHandle(editorRef, () => ({ editor, imgPubIds, traverser }));
+  // on load add img pub ids
+  useEffect(() => {
+    if (editor) {
+      const newImgPubIds: string[] = [];
+      traverser((node) => {
+        if (node.type.name === "image" && node.attrs["pubId"]) {
+          newImgPubIds.push(node.attrs["pubId"]);
+        }
+      })();
+      setImgPubIds([...imgPubIds, ...newImgPubIds]);
+    }
+  }, [editor]);
+
+  function traverser(cb: (node: Node) => void) {
+    return () => {
+      editor?.state.doc.descendants((node) => {
+        cb(node);
+      });
+    };
+  }
+
+  function pushImgPubId(val: string) {
+    setImgPubIds([...imgPubIds, val]);
+  }
+
   return (
-    <div className="flex flex-col gap-2 justify-stretch min-h-[320px] relative">
-      {!editor ? (
-        <EditorLoading />
-      ) : (
-        <>
-          <ToolBar editor={editor} />
-          <EditorContent editor={editor} />
-        </>
-      )}
-    </div>
+    <EditorCtx.Provider
+      value={{
+        editor,
+        imgPubIds,
+        setImgPubIds,
+        pushImgPubId,
+        popImgPubId: (val) => setImgPubIds(imgPubIds.filter((i) => i != val)),
+        traverser,
+      }}
+    >
+      <div className="flex flex-col gap-2 justify-stretch min-h-[320px] relative">
+        {!editor ? (
+          <EditorLoading />
+        ) : (
+          <>
+            <ToolBar />
+            <EditorContent editor={editor} />
+          </>
+        )}
+      </div>
+    </EditorCtx.Provider>
   );
 }
 
-export default Editor;
+export default forwardRef(Editor);

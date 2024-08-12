@@ -17,14 +17,11 @@ import {
 import ToolBarToggle from "./ToolBarToggle";
 import ToolBarLink from "./ToolBarLink";
 import ToolBarImage from "./ToolBarImage";
+import { useEditorCtx } from ".";
 
-type Props = {
-  editor: Editor | null;
-};
-
-export function ToolBar({ editor }: Props) {
+export function ToolBar() {
+  const { editor } = useEditorCtx();
   if (!editor) return null;
-
   return (
     <div className="border border-input rounded-md sticky top-0 bg-background z-10 flex flex-wrap gap-3 justify-center items-center">
       <ToolBarToggle
@@ -104,7 +101,7 @@ export function ToolBar({ editor }: Props) {
         Icon={AlignRight}
         onHoverMessage="Text align right"
       />
-      <ToolBarImage editor={editor} />
+      <ToolBarImage />
     </div>
   );
 }
