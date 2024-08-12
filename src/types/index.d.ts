@@ -21,7 +21,9 @@ type BlogEditorType = {
   category: string;
   about: string;
   image: string;
+  imagePubId: string;
   description: string;
+  descImgsIds: string[];
 };
 
 type BlogPostType = BlogEditorType & {
