@@ -41,13 +41,19 @@ import { FileConfig } from "@/lib/config/files";
 import { deleteImageById, uploadImage } from "@/lib/services/server/utils";
 import usePreventNavigation from "@/hooks/use-prevent-navigation";
 
-type Props = {
-  submitAction: (data: BlogEditorType) => Promise<AppResponseType<any>>;
+type Props<R> = {
+  submitAction: (data: BlogEditorType) => Promise<AppResponseType<R | null>>;
   defaultValues: BlogEditorType;
-  afterSubmit?: () => void;
+  onSuccess?: (res: AppResponseType<R>) => void;
+  onFail?: (res: AppResponseType<null>) => void;
 };
 
-function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
+function BlogEditor<R>({
+  defaultValues,
+  submitAction,
+  onSuccess,
+  onFail,
+}: Props<R>) {
   const { toast } = useToast();
   const editorRef = useRef<EditorRef | null>(null);
   usePreventNavigation();
@@ -135,6 +141,9 @@ function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
         description: res.err,
         className: "text-red-400",
       });
+      if (onFail) {
+        onFail(res as AppResponseType<null>);
+      }
       return;
     } else {
       toast({
@@ -147,8 +156,8 @@ function BlogEditor({ defaultValues, submitAction, afterSubmit }: Props) {
       );
       idsToBeDeleted?.map((id) => deleteImageById(id));
 
-      if (afterSubmit) {
-        afterSubmit();
+      if (onSuccess) {
+        onSuccess(res as AppResponseType<R>);
       }
     }
   };

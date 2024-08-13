@@ -2,8 +2,8 @@
 import { addBlogPost } from "@/lib/services/server/blog.controller";
 import BlogEditor from "../BlogEditor";
 import { useRouter } from "next/navigation";
-import { links } from "@/lib/routes";
 import { BlogEditorType } from "@/types";
+import { links } from "@/lib/routes";
 
 function AddBlogPage() {
   const router = useRouter();
@@ -21,8 +21,8 @@ function AddBlogPage() {
         imagePubId: "",
         descImgsIds: [],
       }}
-      afterSubmit={() => {
-        router.push(links.home);
+      onSuccess={(res) => {
+        router.push(links.blog(res!.data.id));
       }}
     />
   );

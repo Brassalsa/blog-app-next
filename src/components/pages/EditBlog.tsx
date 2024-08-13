@@ -17,7 +17,7 @@ function EditBlogPage({ post }: Props) {
         return await editPost(post.id, data);
       }}
       defaultValues={{ ...post }}
-      afterSubmit={() => {
+      onSuccess={() => {
         router.push(links.blog(post.id));
       }}
     />
