@@ -17,11 +17,13 @@ function Hero() {
         <h1 className="lg:text-5xl md:text-4xl sm:text-3xl  text-2xl flex flex-col">
           <TextGenerateEffect
             className="font-semibold"
-            words="Hey there, its Saurav Chauhan here"
+            children={`Hey there, its Saurav Chauhan here`}
+            preset="blur"
           />
           <TextGenerateEffect
             className="font-medium"
-            words="Discover my stories and creative ideas"
+            children="Discover my stories and creative ideas"
+            preset="blur"
           />
         </h1>
       </div>
