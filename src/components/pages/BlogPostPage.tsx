@@ -9,7 +9,7 @@ import PostMenu, {
   ActionEdit,
   ShowWhenIsOwner,
   ViewAuthor,
-} from "../PostMenu";
+} from "../post-menu";
 
 function BlogPostPage({
   id,

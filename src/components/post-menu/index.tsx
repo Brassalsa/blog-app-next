@@ -5,16 +5,24 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 import { links } from "@/lib/routes";
 import Link from "next/link";
-import React, { createContext, PropsWithChildren, useContext } from "react";
+import React, {
+  ComponentPropsWithoutRef,
+  createContext,
+  forwardRef,
+  PropsWithChildren,
+  useContext,
+} from "react";
 import { useSession } from "next-auth/react";
-import { useToast } from "@/hooks/use-toast";
-import { deletePost } from "@/lib/services/server/blog.controller";
-import { AuthorType, Cb, PropsDefault, PropsWithClassName } from "@/types";
+import { AuthorType, PropsWithClassName } from "@/types";
 import { cn } from "@/lib/utils";
+import ActionDelete from "./ActionDelete";
+
+// other exports
+export { ActionDelete };
 
 type PostMenuCtxT = {
   id: string;
@@ -22,7 +30,7 @@ type PostMenuCtxT = {
 };
 const PostMenuCtx = createContext<PostMenuCtxT | null>(null);
 
-const usePostMenuCtx = () => {
+export const usePostMenuCtx = () => {
   const ctx = useContext(PostMenuCtx);
   if (!ctx)
     throw new Error("usePostMenuCtx must be used inside PostMenu", {
@@ -87,35 +95,6 @@ export const ActionEdit = () => {
   return <MenuLink href={links.editBlog(id)}>Edit</MenuLink>;
 };
 
-export const ActionDelete = () => {
-  const { toast } = useToast();
-  const { id } = usePostMenuCtx();
-  const deleteBlogPost = async () => {
-    const res = await deletePost(id);
-    if (res.err) {
-      toast({
-        title: "Delete Post",
-        description: res.err,
-        className: "text-red-400",
-      });
-    } else {
-      toast({
-        title: "Delete Post",
-        description: res.data,
-      });
-    }
-  };
-
-  return (
-    <MenuBtn
-      onClick={deleteBlogPost}
-      className="cursor-pointer text-center justify-center items-center"
-    >
-      Delete
-    </MenuBtn>
-  );
-};
-
 export const ShowWhenIsOwner = ({ children }: PropsWithChildren) => {
   const { data } = useSession();
   const { author } = usePostMenuCtx();
@@ -143,14 +122,14 @@ export const MenuLink = ({ href, children }: MenuItemProps) => {
   );
 };
 
-export const MenuBtn = ({
-  children,
-  className,
-  onClick,
-}: PropsDefault & { onClick?: Cb }) => {
-  return (
-    <DropdownMenuItem onClick={() => onClick?.()} className={className}>
-      {children}
-    </DropdownMenuItem>
-  );
-};
+export const MenuBtn = (
+  props: ComponentPropsWithoutRef<"div"> & { asChild?: boolean }
+) => (
+  <div
+    {...props}
+    className={cn(
+      "cursor-pointer text-center justify-center items-center hover:bg-muted py-2 text-sm rounded-sm",
+      props.className
+    )}
+  />
+);

@@ -17,6 +17,10 @@ export default function DeleteComment({ comment }: { comment: CommentType }) {
   const { toast } = useToast();
 
   const handleDelete = async () => {
+    toast({
+      title: "Comment",
+      description: "Comment deletion in progress",
+    });
     const res = await deleteComment(comment.id, comment.postId);
     if (!res.data) {
       toast({

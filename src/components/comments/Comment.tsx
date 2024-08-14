@@ -4,7 +4,6 @@ import AuthorUI from "../AuthorUI";
 import { Card, CardContent, CardDescription } from "../ui/card";
 import CommentMenu from "./CommentMenu";
 import { CommentType } from "@/types";
-import { useState } from "react";
 import ShowMore from "../ui/show-more";
 
 export default function Comment({
@@ -14,7 +13,6 @@ export default function Comment({
   comment: CommentType;
   showMenu?: boolean;
 }) {
-  const [showMore, setShowMore] = useState(false);
   return (
     <Card className="my-3">
       <CardContent className="border flex flex-col gap-2 justify-center py-3 rounded-lg relative">

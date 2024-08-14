@@ -17,7 +17,7 @@ import { links } from "@/lib/routes";
 import AuthorUI from "./AuthorUI";
 import { BlogPostCard, PropsDefault, PropsWithClassName } from "@/types";
 import { Skeleton } from "./ui/skeleton";
-import PostMenu from "./PostMenu";
+import PostMenu from "./post-menu";
 import MultiplyNode from "./ui/multiply-node";
 
 const PostCardContext = createContext<BlogPostCard | null>(null);

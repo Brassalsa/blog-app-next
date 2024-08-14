@@ -20,7 +20,7 @@ export default function CommentMenu({ comment }: MenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={"ghost"}>
+        <Button variant={"ghost"} className="scale-75">
           <Ellipsis />
         </Button>
       </DropdownMenuTrigger>
